@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 
-class ThirdFragment : Fragment() {
+class StopFragment : Fragment() {
 
     private lateinit var stopLayout: View
     private lateinit var confirmationStopLayout: View
@@ -19,7 +19,7 @@ class ThirdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_third, container, false)
+        val view = inflater.inflate(R.layout.stop_fragment, container, false)
 
         stopLayout = view.findViewById(R.id.stop_layout)
         confirmationStopLayout = view.findViewById(R.id.confirmation_stop_layout)
@@ -27,15 +27,13 @@ class ThirdFragment : Fragment() {
         val stopButton: Button = view.findViewById(R.id.stopButton)
         stopButton.setOnClickListener {
             showConfirmationStopDialog(stopLayout, confirmationStopLayout)
-            true
         }
 
         return view
     }
 
     private fun showConfirmationStopDialog(stopLayout: View, confirmationStopLayout: View) {
-        stopLayout.visibility = View.GONE
-        confirmationStopLayout.visibility = View.VISIBLE
+        showDialog(stopLayout, confirmationStopLayout)
 
         val cancelButton =
             confirmationStopLayout.findViewById<TextView>(R.id.stop_confirmation_cancel_button)
@@ -43,15 +41,28 @@ class ThirdFragment : Fragment() {
             confirmationStopLayout.findViewById<TextView>(R.id.stop_confirmation_confirm_button)
 
         cancelButton.setOnClickListener {
-            confirmationStopLayout.visibility = View.GONE
-            stopLayout.visibility = View.VISIBLE
+            hideDialog(confirmationStopLayout, stopLayout)
         }
 
         confirmButton.setOnClickListener {
-            val intent = Intent(activity, TimerSetupActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
+            restartApp()
         }
+    }
+
+    private fun showDialog(stopLayout: View, confirmationStopLayout: View) {
+        stopLayout.visibility = View.GONE
+        confirmationStopLayout.visibility = View.VISIBLE
+    }
+
+    private fun hideDialog(confirmationStopLayout: View, stopLayout: View) {
+        confirmationStopLayout.visibility = View.GONE
+        stopLayout.visibility = View.VISIBLE
+    }
+
+    private fun restartApp() {
+        val intent = Intent(activity, TimerSetupActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 }
 

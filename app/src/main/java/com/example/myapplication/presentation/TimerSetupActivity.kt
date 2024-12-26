@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.R
 
 class TimerSetupActivity : AppCompatActivity() {
-    private var timeInMinutes = 5L
+    private var timeInMinutes = DEFAULT_TIME_DURATION_MINUTES
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_timer_setup)
+        setContentView(R.layout.timer_setup_activity)
 
         val timeTextView: TextView = findViewById(R.id.timeTextView)
         val incrementButton: Button = findViewById(R.id.incrementButton)
