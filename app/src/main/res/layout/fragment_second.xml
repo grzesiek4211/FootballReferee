@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/score_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <!--        <include-->
+        <!--            android:id="@+id/score_editor_layout"-->
+        <!--            layout="@layout/dialog_score"-->
+        <!--            android:visibility="gone" />-->
+
+        <TextView
+            android:id="@+id/score_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:text="0"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toStartOf="@+id/score_right"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/my_team"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:text="moja"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/score_right"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/score_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:text="0"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/score_editor_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/dialog_score_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="64dp"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="48sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/increment_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="▲"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_score_left"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_score_left"
+            app:layout_constraintStart_toStartOf="@+id/dialog_score_left" />
+
+        <TextView
+            android:id="@+id/decrement_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="▼"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_score_left"
+            app:layout_constraintStart_toStartOf="@+id/dialog_score_left"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_score_left" />
+
+        <TextView
+            android:id="@+id/dialog_score_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="64dp"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="48sp"
+            app:layout_constraintStart_toEndOf="@+id/dialog_score_left"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/increment_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="▲"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_score_right"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_score_right"
+            app:layout_constraintStart_toStartOf="@+id/dialog_score_right" />
+
+        <TextView
+            android:id="@+id/decrement_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="0dp"
+            android:text="▼"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_score_right"
+            app:layout_constraintStart_toStartOf="@+id/dialog_score_right"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_score_right" />
+
+        <TextView
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="X"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/decrement_left"
+            app:layout_constraintRight_toLeftOf="@+id/dialog_score_left"
+            />
+
+        <TextView
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:padding="16dp"
+            android:text="✔"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/decrement_right"
+            app:layout_constraintLeft_toRightOf="@+id/dialog_score_right" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
