@@ -38,7 +38,13 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity is not the launcher activity -->
+        <activity
+            android:name=".presentation.TeamSetupActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
