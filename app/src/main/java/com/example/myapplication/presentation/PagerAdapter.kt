@@ -4,10 +4,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class PagerAdapter(fragmentActivity: FragmentActivity, timerDuration: Long) : FragmentStateAdapter(fragmentActivity) {
+class PagerAdapter(
+    fragmentActivity: FragmentActivity,
+    timerDuration: Long,
+    myTeam: ArrayList<String>,
+    opponentTeam: ArrayList<String>
+) : FragmentStateAdapter(fragmentActivity) {
 
     private val timerFragment: TimerFragment = TimerFragment.newInstance(timerDuration)
-    private val scoreFragment: ScoreFragment = ScoreFragment()
+    private val scoreFragment: ScoreFragment = ScoreFragment.newInstance(myTeam, opponentTeam)
     private val stopFragment: StopFragment = StopFragment()
 
     override fun getItemCount(): Int = 3 // Number of pages

@@ -9,7 +9,24 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 
-class ScoreFragment : Fragment() {
+class ScoreFragment(
+    private val myTeam: List<String>,
+    private val opponentTeam: List<String>,
+    private val history: MutableList<HistoryItem> = mutableListOf()
+) : Fragment() {
+
+    companion object {
+        fun newInstance(myTeam: ArrayList<String>, opponentTeam: ArrayList<String>) = ScoreFragment(myTeam, opponentTeam)
+//            .apply {
+//            arguments = Bundle().apply {
+//                putStringArrayList("MY_TEAM", myTeam)
+//                putStringArrayList("OPPONENT_TEAM", opponentTeam)
+//            }
+//        }
+    }
+
+//    private lateinit var myTeam: ArrayList<String>
+//    private lateinit var opponentTeam: ArrayList<String>
 
     private lateinit var scoreLeftTextView: TextView
     private lateinit var scoreRightTextView: TextView
@@ -23,6 +40,10 @@ class ScoreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+//        arguments?.let {
+//            myTeam = it.getStringArrayList("MY_TEAM") ?: arrayListOf()
+//            opponentTeam = it.getStringArrayList("OPPONENT_TEAM") ?: arrayListOf()
+//        }
         val view = inflater.inflate(R.layout.score_fragment, container, false)
         initScoreView(view)
         initLeftScore(view)
