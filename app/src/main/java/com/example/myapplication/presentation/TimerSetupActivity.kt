@@ -17,7 +17,7 @@ class TimerSetupActivity : AppCompatActivity() {
         val timeTextView: TextView = findViewById(R.id.timeTextView)
         val incrementButton: Button = findViewById(R.id.incrementButton)
         val decrementButton: Button = findViewById(R.id.decrementButton)
-        val startButton: Button = findViewById(R.id.startButton)
+        val nextButton: Button = findViewById(R.id.nextButton)
 
         updateDisplayedTime(timeTextView)
 
@@ -33,8 +33,8 @@ class TimerSetupActivity : AppCompatActivity() {
             }
         }
 
-        startButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+        nextButton.setOnClickListener {
+            val intent = Intent(this, TeamSetupActivity::class.java)
             intent.putExtra("TIMER_DURATION", timeInMinutes * 60 * 1000)
             startActivity(intent)
             finish()  // Close this activity to prevent going back to it
