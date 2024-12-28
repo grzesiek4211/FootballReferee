@@ -13,15 +13,17 @@ class PagerAdapter(
 
     private val timerFragment: TimerFragment = TimerFragment.newInstance(timerDuration)
     private val scoreFragment: ScoreFragment = ScoreFragment.newInstance(myTeam, opponentTeam)
+    private val matchSummaryFragment: MatchSummaryFragment = MatchSummaryFragment.newInstance()
     private val stopFragment: StopFragment = StopFragment()
 
-    override fun getItemCount(): Int = 3 // Number of pages
+    override fun getItemCount(): Int = 4 // Number of pages
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> timerFragment
             1 -> scoreFragment
-            2 -> stopFragment
+            2 -> matchSummaryFragment
+            3 -> stopFragment
             else -> TimerFragment()
         }
     }
