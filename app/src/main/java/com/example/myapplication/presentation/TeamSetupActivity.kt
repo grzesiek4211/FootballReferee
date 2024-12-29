@@ -169,7 +169,7 @@ class TeamSetupActivity : AppCompatActivity() {
             positiveButton.setPadding(32, 0, 32, 0)
             positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
 
-            negativeButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            negativeButton.gravity = Gravity.END or Gravity.CENTER_VERTICAL
             negativeButton.setPadding(32, 0, 32, 0)
             negativeButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
         }
