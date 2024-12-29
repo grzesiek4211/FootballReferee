@@ -5,6 +5,7 @@ class HistoryItem(
     val team: Team,
     private val scorer: String,
     private val ownGoal: Boolean = false,
+    val minute: Int,
     private val assistant: String?
 ) {
 
@@ -14,6 +15,7 @@ class HistoryItem(
             team = team,
             scorer = scorer,
             ownGoal = ownGoal,
+            minute = minute,
             assistant = assistant
         )
     }

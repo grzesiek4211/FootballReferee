@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import java.time.Instant
 
 private const val TEAM_PLAYERS_NUMBER = 7
 
@@ -78,6 +79,7 @@ class TeamSetupActivity : AppCompatActivity() {
             intent.setClass(this, MainActivity::class.java)
             intent.putStringArrayListExtra("MY_TEAM", ArrayList(myTeam))
             intent.putStringArrayListExtra("OPPONENT_TEAM", ArrayList(opponentTeam))
+            intent.putExtra("MATCH_START_TIME", Instant.now().toString())
             startActivity(intent)
             finish()  // Close this activity to prevent going back to it
         }

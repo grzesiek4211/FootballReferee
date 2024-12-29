@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.time.Instant
 
 const val DEFAULT_TIME_DURATION_MINUTES = 5L
 
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private var timerDuration: Long = DEFAULT_TIME_DURATION_MINUTES
     private lateinit var myTeam: ArrayList<String>
     private lateinit var opponentTeam: ArrayList<String>
+    private lateinit var matchStartTime: Instant
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -23,9 +25,10 @@ class MainActivity : AppCompatActivity() {
         timerDuration = intent.getLongExtra("TIMER_DURATION", DEFAULT_TIME_DURATION_MINUTES)
         myTeam = intent.getStringArrayListExtra("MY_TEAM" ) ?: arrayListOf()
         opponentTeam = intent.getStringArrayListExtra("OPPONENT_TEAM" ) ?: arrayListOf()
+        matchStartTime = Instant.parse(intent.getStringExtra("MATCH_START_TIME"))
 
         val viewPager: ViewPager2 = findViewById(R.id.viewPager)
-        val pagerAdapter = PagerAdapter(this, timerDuration, myTeam, opponentTeam)
+        val pagerAdapter = PagerAdapter(this, timerDuration, myTeam, opponentTeam, matchStartTime)
         viewPager.adapter = pagerAdapter
 
         setNotClickablePageIndicators(viewPager)

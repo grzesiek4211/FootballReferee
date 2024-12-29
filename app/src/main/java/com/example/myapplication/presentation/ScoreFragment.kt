@@ -14,15 +14,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
+import java.time.Instant
 
 class ScoreFragment(
     private val team1: List<String>,
     private val team2: List<String>,
+    private val matchStartTime: Instant
 ) : CurrentTimeFragment(R.layout.score_fragment, R.id.current_time) {
 
     companion object {
-        fun newInstance(team1: ArrayList<String>, team2: ArrayList<String>) =
-            ScoreFragment(team1, team2)
+        fun newInstance(team1: ArrayList<String>, team2: ArrayList<String>, matchStartTime: Instant) =
+            ScoreFragment(team1, team2, matchStartTime)
     }
 
     private lateinit var scoreTextViewTeam1: TextView
@@ -111,6 +113,7 @@ class ScoreFragment(
                     team,
                     scorer,
                     otherTeam.contains(scorer),
+                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
                     assistant
                 ))
             }
