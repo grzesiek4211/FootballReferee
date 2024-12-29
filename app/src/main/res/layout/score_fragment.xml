@@ -17,6 +17,7 @@
 
     <!-- Main Score Layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/score_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="24dp"
@@ -72,7 +73,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Score Editor Layout -->
     <!-- Score Editor Layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/score_editor_layout"
