@@ -59,7 +59,7 @@ class MatchSummaryFragment : Fragment() {
             val scoreTextView = TextView(requireContext()).apply {
                 val team1Score: Score = item.takeIf { it.team == Team.TEAM1 }?.score ?: history.opponentScore(item)
                 val team2Score: Score = item.takeIf { it.team == Team.TEAM2 }?.score ?: history.opponentScore(item)
-                text = "${team1Score}-${team2Score}"
+                text = "${team1Score}-${team2Score} (${item.minute}\')"
                 textSize = 18f
                 gravity = Gravity.CENTER
 
