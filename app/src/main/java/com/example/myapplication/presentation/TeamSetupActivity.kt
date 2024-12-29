@@ -30,8 +30,8 @@ class TeamSetupActivity : AppCompatActivity() {
         )
     }
 
-    private val myTeam: MutableList<String> = mutableListOf()
-    private val opponentTeam: MutableList<String> = mutableListOf()
+    private val myTeam: MutableList<String> = mutableListOf("Bartłomiej M.", "Bartosz G.", "Dave Pe", "Eryk S.", "Filip N.", "Filip O.", "Grzegorz K.") // todo wyrzucic
+    private val opponentTeam: MutableList<String> = mutableListOf("Player8", "Player9", "Player10", "Player11", "Player12", "Player13", "Player14") // todo wyrzucic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,10 +99,10 @@ class TeamSetupActivity : AppCompatActivity() {
             setPadding(0, 16, 0, 0)
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(this@TeamSetupActivity, android.R.color.black))
+            setTextColor(ContextCompat.getColor(this@TeamSetupActivity, android.R.color.white))
         }
 
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
         builder.setCustomTitle(titleView)
 
         val checkedItems = BooleanArray(availablePlayers.size) { index ->
@@ -122,19 +122,28 @@ class TeamSetupActivity : AppCompatActivity() {
                 } else {
                     checkedItems[which] = false
                     alertDialog.listView.setItemChecked(which, false)
-                    Toast.makeText(this,
-                        getString(R.string.toast_team_setup, TEAM_PLAYERS_NUMBER), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.toast_team_setup, TEAM_PLAYERS_NUMBER),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
                 selectedPlayers.remove(selectedItem)
             }
 
             val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            positiveButton.text = getString(R.string.add_players_button_text, selectedPlayers.size, TEAM_PLAYERS_NUMBER)
+            positiveButton.text = getString(
+                R.string.add_players_button_text,
+                selectedPlayers.size,
+                TEAM_PLAYERS_NUMBER
+            )
             positiveButton.isEnabled = selectedPlayers.size == TEAM_PLAYERS_NUMBER
         }
 
-        builder.setPositiveButton(getString(R.string.add_players_button_text, 0, TEAM_PLAYERS_NUMBER)) { _, _ ->
+        builder.setPositiveButton(
+            getString(R.string.add_players_button_text, 0, TEAM_PLAYERS_NUMBER)
+        ) { _, _ ->
             if (selectedPlayers.isNotEmpty()) {
                 team.clear()
                 team.addAll(selectedPlayers)
@@ -142,16 +151,25 @@ class TeamSetupActivity : AppCompatActivity() {
             }
         }
 
-        builder.setNegativeButton(getString(R.string.cancel_button), null)
+        builder.setNegativeButton(" ${getString(R.string.cancel_button)}", null)
 
         val dialog = builder.create()
 
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            positiveButton.text = getString(R.string.add_players_button_text, selectedPlayers.size, TEAM_PLAYERS_NUMBER)
+            positiveButton.text = getString(
+                R.string.add_players_button_text,
+                selectedPlayers.size,
+                TEAM_PLAYERS_NUMBER
+            )
             positiveButton.isEnabled = selectedPlayers.size == TEAM_PLAYERS_NUMBER
+
+            positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(this, android.R.color.white))
         }
 
         dialog.show()
     }
+
 }

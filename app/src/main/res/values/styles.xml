@@ -5,4 +5,10 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/football_13302</item>
         <item name="postSplashScreenTheme">@android:style/Theme.DeviceDefault</item>
     </style>
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">#000000</item> <!-- Black background -->
+        <item name="android:textColor">#FFFFFF</item> <!-- White text -->
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
 </resources>
