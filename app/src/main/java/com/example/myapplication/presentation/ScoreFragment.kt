@@ -29,16 +29,6 @@ class ScoreFragment(
     private lateinit var scoreTextViewTeam2: TextView
     private lateinit var scoreFragmentView: View
 
-    private lateinit var scoreLeftTextView: TextView
-    private lateinit var scoreRightTextView: TextView
-    private lateinit var incrementLeft: TextView
-    private lateinit var decrementLeft: TextView
-    private lateinit var incrementRight: TextView
-    private lateinit var decrementRight: TextView
-    private lateinit var cancelButton: TextView
-    private lateinit var confirmButton: TextView
-    private lateinit var scoreEditorView: View
-
     private lateinit var sharedViewModel: SharedViewModel
     private var history: History = History()
     private var editableHistory = history.copy()
@@ -53,7 +43,6 @@ class ScoreFragment(
         super.onCreate(savedInstanceState)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         initScoreView(view)
-        initScoreEditorViewAsInvisible(view)
 
         return view
     }
@@ -86,7 +75,7 @@ class ScoreFragment(
             updateSharedHistory()
         }
         scoreTextView.setOnLongClickListener {
-            editScoreView(scoreFragmentView, scoreEditorView)
+            editScoreViewAsDialog()
             true
         }
         scoreTextView.text = "0"
@@ -128,28 +117,25 @@ class ScoreFragment(
         }
     }
 
-    private fun editScoreView(scoreView: View, scoreEditorView: View) {
-        scoreView.visibility = View.GONE
-        scoreEditorView.visibility = View.VISIBLE
+    private fun editScoreViewAsDialog() {
+        val scoreEditorView = layoutInflater.inflate(R.layout.score_fragment_editable, null)
+
+        val scoreLeftTextView = scoreEditorView.findViewById<TextView>(R.id.dialog_score_left)
+        val scoreRightTextView = scoreEditorView.findViewById<TextView>(R.id.dialog_score_right)
+        val incrementLeft = scoreEditorView.findViewById<TextView>(R.id.increment_left)
+        val decrementLeft = scoreEditorView.findViewById<TextView>(R.id.decrement_left)
+        val incrementRight = scoreEditorView.findViewById<TextView>(R.id.increment_right)
+        val decrementRight = scoreEditorView.findViewById<TextView>(R.id.decrement_right)
+        val cancelButton = scoreEditorView.findViewById<TextView>(R.id.cancel_button)
+        val confirmButton = scoreEditorView.findViewById<TextView>(R.id.confirm_button)
 
         scoreLeftTextView.text = backupScoreTeam1.toString()
         scoreRightTextView.text = backupScoreTeam2.toString()
-
         editableHistory = history.copy()
-    }
 
-    private fun initScoreEditorViewAsInvisible(view: View) {
-        scoreEditorView = view.findViewById(R.id.score_editor_layout)
-        scoreEditorView.visibility = View.GONE
-
-        scoreLeftTextView = scoreEditorView.findViewById(R.id.dialog_score_left)
-        scoreRightTextView = scoreEditorView.findViewById(R.id.dialog_score_right)
-        incrementLeft = scoreEditorView.findViewById(R.id.increment_left)
-        decrementLeft = scoreEditorView.findViewById(R.id.decrement_left)
-        incrementRight = scoreEditorView.findViewById(R.id.increment_right)
-        decrementRight = scoreEditorView.findViewById(R.id.decrement_right)
-        cancelButton = scoreEditorView.findViewById(R.id.cancel_button)
-        confirmButton = scoreEditorView.findViewById(R.id.confirm_button)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(scoreEditorView)
+        val dialog = builder.create()
 
         incrementLeft.setOnClickListener {
             incrementScore(team1, team2, backupScoreTeam1.copy(), scoreLeftTextView, editableHistory, Team.TEAM1)
@@ -170,22 +156,22 @@ class ScoreFragment(
         cancelButton.setOnClickListener {
             this.scoreTextViewTeam1.text = backupScoreTeam1.toString()
             this.scoreTextViewTeam2.text = backupScoreTeam2.toString()
-            scoreEditorView.visibility = View.GONE
-            scoreFragmentView.visibility = View.VISIBLE
             editableHistory = history.copy()
+            dialog.dismiss()
         }
 
         confirmButton.setOnClickListener {
             backupScoreTeam1.set(scoreLeftTextView.text.toString().toInt())
-            this.scoreTextViewTeam1.text = backupScoreTeam1.toString()
             backupScoreTeam2.set(scoreRightTextView.text.toString().toInt())
-            this.scoreTextViewTeam2.text = backupScoreTeam2.toString()
-
-            scoreEditorView.visibility = View.GONE
-            scoreFragmentView.visibility = View.VISIBLE
+            scoreTextViewTeam1.text = backupScoreTeam1.toString()
+            scoreTextViewTeam2.text = backupScoreTeam2.toString()
             history = editableHistory.copy()
             updateSharedHistory()
+            dialog.dismiss()
         }
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.black)
+        dialog.show()
     }
 
     private fun decrementScore(scoreTextView: TextView, team: Team) {
@@ -208,7 +194,7 @@ class ScoreFragment(
             textSize = 14f
             setPadding(32, 24, 32, 0)
             gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)) // Set to white for dark mode
+            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
         }
 
         val builder = AlertDialog.Builder(requireContext())
@@ -241,12 +227,11 @@ class ScoreFragment(
 
         val dialog = builder.create()
         dialog.setOnShowListener {
-            // Adjust button text colors for dark mode
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                 ?.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
         }
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.black) // Set dialog background to black
+        dialog.window?.setBackgroundDrawableResource(android.R.color.black)
         dialog.show()
     }
 
