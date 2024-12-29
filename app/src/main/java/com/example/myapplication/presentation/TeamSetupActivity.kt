@@ -151,23 +151,29 @@ class TeamSetupActivity : AppCompatActivity() {
             }
         }
 
-        builder.setNegativeButton(" ${getString(R.string.cancel_button)}", null)
+        builder.setNegativeButton(getString(R.string.cancel_button), null)
 
         val dialog = builder.create()
 
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
             positiveButton.text = getString(
                 R.string.add_players_button_text,
                 selectedPlayers.size,
                 TEAM_PLAYERS_NUMBER
             )
             positiveButton.isEnabled = selectedPlayers.size == TEAM_PLAYERS_NUMBER
-
+            positiveButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            positiveButton.setPadding(32, 0, 32, 0)
             positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                .setTextColor(ContextCompat.getColor(this, android.R.color.white))
+
+            negativeButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            negativeButton.setPadding(32, 0, 32, 0)
+            negativeButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
         }
+
 
         dialog.show()
     }
