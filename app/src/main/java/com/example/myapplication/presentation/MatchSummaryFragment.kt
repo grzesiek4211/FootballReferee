@@ -26,7 +26,19 @@ class MatchSummaryFragment : Fragment() {
         val view = inflater.inflate(R.layout.match_summary_fragment, container, false)
         summaryContainer = view.findViewById(R.id.summary_container)
 
+        setTitle()
+
         return view
+    }
+
+    private fun setTitle() {
+        val titleTextView = TextView(requireContext()).apply {
+            text = "Summary"
+            textSize = 24f
+            gravity = Gravity.CENTER
+            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+        }
+        summaryContainer.addView(titleTextView, 0)
     }
 
     override fun onResume() {
@@ -41,33 +53,33 @@ class MatchSummaryFragment : Fragment() {
 
     private fun populateSummary(container: LinearLayout, history: History) {
         container.removeAllViews()
+        setTitle()
         for (i in 0..<history.history.size) {
             val item = history.history[i]
             val scoreTextView = TextView(requireContext()).apply {
-                text = "${item.team1Score}-${item.team2Score}"
+                val team1Score: Score = item.takeIf { it.team == Team.TEAM1 }?.score ?: history.opponentScore(item)
+                val team2Score: Score = item.takeIf { it.team == Team.TEAM2 }?.score ?: history.opponentScore(item)
+                text = "${team1Score}-${team2Score}"
                 textSize = 18f
                 gravity = Gravity.CENTER
 
-                val previousTeam2Score = if(i > 0) {
-                    history.history[i - 1].team2Score.value
-                } else {
-                    0
-                }
-                if (item.team2Score.value > previousTeam2Score) {
+                if (item.team == Team.TEAM2) {
                     setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark))
                 } else {
                     setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
                 }
             }
-            container.addView(scoreTextView, 2 * i)
+            container.addView(scoreTextView, 2 * i + 1)
 
             val scorerAssistantTextView = TextView(requireContext()).apply {
                 text = item.scorerToString()
                 textSize = 16f
                 gravity = Gravity.CENTER
             }
-            container.addView(scorerAssistantTextView, 2 * i + 1)
+            container.addView(scorerAssistantTextView, 2 * i + 2)
         }
+        container.addView(TextView(requireContext()))
+        container.addView(TextView(requireContext()))
     }
 
     companion object {

@@ -66,17 +66,23 @@ class ScoreFragment(
 
     private fun initScoreTeam1(view: View) {
         scoreTextViewTeam1 = view.findViewById(R.id.score_team1)
-        initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1)
+        initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
     }
 
     private fun initScoreTeam2(view: View) {
         scoreTextViewTeam2 = view.findViewById(R.id.score_team2)
-        initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2)
+        initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
     }
 
-    private fun initScore(scoreTextView: TextView, team: List<String>, otherTeam: List<String>, currentScore: Score) {
+    private fun initScore(
+        scoreTextView: TextView,
+        team: List<String>,
+        otherTeam: List<String>,
+        currentScore: Score,
+        whichTeam: Team
+    ) {
         scoreTextView.setOnClickListener {
-            incrementScore(team, otherTeam, currentScore, scoreTextView, history, scoreTextViewTeam1, scoreTextViewTeam2)
+            incrementScore(team, otherTeam, currentScore, scoreTextView, history, whichTeam)
             updateSharedHistory()
         }
         scoreTextView.setOnLongClickListener {
@@ -92,11 +98,10 @@ class ScoreFragment(
         currentScore: Score,
         scoreTextView: TextView,
         history: History,
-        scoreTextViewTeam1: TextView,
-        scoreTextViewTeam2: TextView
+        team: Team
     ) {
         var scorer: String
-        var assistant: String
+        var assistant: String? = null
         val extendedList = mutableListOf("---NONE---")
         extendedList.addAll(scoringTeam)
         extendedList.addAll(otherTeam)
@@ -104,13 +109,17 @@ class ScoreFragment(
             scorer = selectedScorer
 
             showPlayerListDialog("Select goal assistant", extendedList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
-                assistant = selectedAssistant
-                Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
+                if (selectedAssistant != "---NONE---") {
+                    assistant = selectedAssistant
+                    Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT).show()
+                }
                 currentScore.increment()
                 scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
                 history.add(HistoryItem(
-                    Score(scoreTextViewTeam1.text.toString().toInt()),
-                    Score(scoreTextViewTeam2.text.toString().toInt()),
+                    Score(scoreTextView.text.toString().toInt()),
+                    team,
                     scorer,
                     otherTeam.contains(scorer),
                     assistant
@@ -143,19 +152,19 @@ class ScoreFragment(
         confirmButton = scoreEditorView.findViewById(R.id.confirm_button)
 
         incrementLeft.setOnClickListener {
-            incrementScore(team1, team2, backupScoreTeam1.copy(), scoreLeftTextView, editableHistory, scoreLeftTextView, scoreRightTextView)
+            incrementScore(team1, team2, backupScoreTeam1.copy(), scoreLeftTextView, editableHistory, Team.TEAM1)
         }
 
         decrementLeft.setOnClickListener {
-            decrementScore(scoreLeftTextView)
+            decrementScore(scoreLeftTextView, Team.TEAM1)
         }
 
         incrementRight.setOnClickListener {
-            incrementScore(team2, team1, backupScoreTeam2.copy(), scoreRightTextView, editableHistory, scoreLeftTextView, scoreRightTextView)
+            incrementScore(team2, team1, backupScoreTeam2.copy(), scoreRightTextView, editableHistory, Team.TEAM2)
         }
 
         decrementRight.setOnClickListener {
-            decrementScore(scoreRightTextView)
+            decrementScore(scoreRightTextView, Team.TEAM2)
         }
 
         cancelButton.setOnClickListener {
@@ -179,14 +188,11 @@ class ScoreFragment(
         }
     }
 
-    private fun decrementScore(scoreTextView: TextView) {
+    private fun decrementScore(scoreTextView: TextView, team: Team) {
         val currentScore = scoreTextView.text.toString().toInt()
         if (currentScore != 0) {
             val newScore = currentScore - 1
-            editableHistory.removeItem(
-                Score(scoreLeftTextView.text.toString().toInt()),
-                Score(scoreRightTextView.text.toString().toInt()),
-            )
+            editableHistory.removeItem(Score(currentScore), team)
             scoreTextView.text = newScore.toString()
         }
     }
