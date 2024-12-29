@@ -37,8 +37,8 @@ class TeamSetupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.team_setup_activity)
 
-        val myTeamRecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
-        val opponentRecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
+        val team1RecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
+        val team2RecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
         val addMyTeamMembers: Button = findViewById(R.id.addMyTeamMembers)
         val addOpponentTeamMembers: Button = findViewById(R.id.addOpponentTeamMembers)
         val startButton: Button = findViewById(R.id.startButton)
@@ -46,15 +46,15 @@ class TeamSetupActivity : AppCompatActivity() {
         val myTeamAdapter = TeamAdapter(myTeam)
         val opponentTeamAdapter = TeamAdapter(opponentTeam)
 
-        myTeamRecyclerView.layoutManager = LinearLayoutManager(this)
-        myTeamRecyclerView.adapter = myTeamAdapter
+        team1RecyclerView.layoutManager = LinearLayoutManager(this)
+        team1RecyclerView.adapter = myTeamAdapter
 
-        opponentRecyclerView.layoutManager = LinearLayoutManager(this)
-        opponentRecyclerView.adapter = opponentTeamAdapter
+        team2RecyclerView.layoutManager = LinearLayoutManager(this)
+        team2RecyclerView.adapter = opponentTeamAdapter
 
         val spacingInDp = resources.getDimensionPixelSize(R.dimen.recycler_spacing)
-        myTeamRecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
-        opponentRecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
+        team1RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
+        team2RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
 
         addMyTeamMembers.setOnClickListener {
             showPlayerSelectionDialog(
