@@ -30,8 +30,8 @@ class TeamSetupActivity : AppCompatActivity() {
         )
     }
 
-    private val myTeam: MutableList<String> = mutableListOf("Bartłomiej M.", "Bartosz G.", "Dave Pe", "Eryk S.", "Filip N.", "Filip O.", "Grzegorz K.") // todo wyrzucic
-    private val opponentTeam: MutableList<String> = mutableListOf("Player8", "Player9", "Player10", "Player11", "Player12", "Player13", "Player14") // todo wyrzucic
+    private val myTeam: MutableList<String> = mutableListOf()
+    private val opponentTeam: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
