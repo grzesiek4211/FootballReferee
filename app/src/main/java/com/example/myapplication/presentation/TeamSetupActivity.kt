@@ -76,8 +76,8 @@ class TeamSetupActivity : AppCompatActivity() {
 
         startButton.setOnClickListener {
             intent.setClass(this, MainActivity::class.java)
-            intent.putExtra("MY_TEAM", myTeam.toTypedArray())
-            intent.putExtra("OPPONENT_TEAM", opponentTeam.toTypedArray())
+            intent.putStringArrayListExtra("MY_TEAM", ArrayList(myTeam))
+            intent.putStringArrayListExtra("OPPONENT_TEAM", ArrayList(opponentTeam))
             startActivity(intent)
             finish()  // Close this activity to prevent going back to it
         }

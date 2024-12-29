@@ -1,6 +1,3 @@
-
-
-
 package com.example.myapplication.presentation
 
 import android.annotation.SuppressLint
@@ -17,14 +14,18 @@ const val DEFAULT_TIME_DURATION_MINUTES = 5L
 
 class MainActivity : AppCompatActivity() {
     private var timerDuration: Long = DEFAULT_TIME_DURATION_MINUTES
+    private lateinit var myTeam: ArrayList<String>
+    private lateinit var opponentTeam: ArrayList<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
         timerDuration = intent.getLongExtra("TIMER_DURATION", DEFAULT_TIME_DURATION_MINUTES)
+        myTeam = intent.getStringArrayListExtra("MY_TEAM" ) ?: arrayListOf()
+        opponentTeam = intent.getStringArrayListExtra("OPPONENT_TEAM" ) ?: arrayListOf()
 
         val viewPager: ViewPager2 = findViewById(R.id.viewPager)
-        val pagerAdapter = PagerAdapter(this, timerDuration)
+        val pagerAdapter = PagerAdapter(this, timerDuration, myTeam, opponentTeam)
         viewPager.adapter = pagerAdapter
 
         setNotClickablePageIndicators(viewPager)

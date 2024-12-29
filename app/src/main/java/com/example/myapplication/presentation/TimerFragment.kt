@@ -4,8 +4,6 @@ package com.example.myapplication.presentation
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.LayoutInflater
@@ -13,13 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.example.myapplication.R
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class TimerFragment() : Fragment() {
+class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_time) {
 
     companion object {
         fun newInstance(timerDuration: Long) = TimerFragment().apply {
@@ -28,10 +22,6 @@ class TimerFragment() : Fragment() {
             }
         }
     }
-
-    private lateinit var currentTimeTextView: TextView
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var timerTextView: TextView
     private lateinit var buttonPausePlay: Button
@@ -45,26 +35,16 @@ class TimerFragment() : Fragment() {
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
 
-
-    private val updateTimeRunnable = object : Runnable {
-        override fun run() {
-            updateTime()
-            handler.postDelayed(this, 1000) // Re-run every second
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         arguments?.let {
             timeRemaining = it.getLong("TIMER_DURATION", DEFAULT_TIME_DURATION_MINUTES * 60 * 1000)
             initialTimerValue = it.getLong("TIMER_DURATION", DEFAULT_TIME_DURATION_MINUTES * 60 * 1000)
         }
-        val view = inflater.inflate(R.layout.timer_fragment, container, false)
-
-        currentTimeTextView = view.findViewById(R.id.current_time)
+        val view = super.onCreateView(inflater, container, savedInstanceState)
 
         timerTextView = view.findViewById(R.id.timerTextView)
         buttonPausePlay = view.findViewById(R.id.button_pause_play)
@@ -100,21 +80,6 @@ class TimerFragment() : Fragment() {
         }
 
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-        handler.post(updateTimeRunnable) // Start updating time when fragment is visible
-    }
-
-    override fun onPause() {
-        super.onPause()
-        handler.removeCallbacks(updateTimeRunnable) // Stop updating time when fragment is not visible
-    }
-
-    private fun updateTime() {
-        val currentTime = timeFormat.format(Date())
-        currentTimeTextView.text = currentTime
     }
 
     private fun initializeTimer() {
