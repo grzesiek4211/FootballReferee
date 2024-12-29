@@ -1,6 +1,9 @@
 package com.example.myapplication.presentation
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,20 +15,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
 
-class MatchSummaryFragment : Fragment() {
+class MatchSummaryFragment() : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var summaryContainer: LinearLayout
+    private lateinit var sharedScreenshotViewModel: SharedScreenshotViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreate(savedInstanceState)
+        sharedScreenshotViewModel = ViewModelProvider(requireActivity()).get(SharedScreenshotViewModel::class.java)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         val view = inflater.inflate(R.layout.match_summary_fragment, container, false)
         summaryContainer = view.findViewById(R.id.summary_container)
-
         setTitle()
 
         return view
@@ -43,28 +47,51 @@ class MatchSummaryFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        refreshSummary()
+        captureScreenshot(refreshSummary())
     }
 
-    private fun refreshSummary() {
+    private fun refreshSummary(): LinearLayout {
         val history = sharedViewModel.history.value ?: History()
-        populateSummary(summaryContainer, history)
+        return populateSummary(summaryContainer, history)
     }
 
-    private fun populateSummary(container: LinearLayout, history: History) {
+    private fun captureScreenshot(view: View) {
+        view.post {
+            try {
+                if (view.width > 0 && view.height > 0) {
+                    val bitmap =
+                        Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bitmap)
+                    view.draw(canvas)
+                    sharedScreenshotViewModel.bitmap.value = bitmap
+                }
+            } catch (e: Exception) {
+                Log.e("ScreenshotError", "Failed to capture screenshot: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun populateSummary(container: LinearLayout, history: History): LinearLayout {
         container.removeAllViews()
         setTitle()
         for (i in 0..<history.history.size) {
             val item = history.history[i]
             val scoreTextView = TextView(requireContext()).apply {
-                val team1Score: Score = item.takeIf { it.team == Team.TEAM1 }?.score ?: history.opponentScore(item)
-                val team2Score: Score = item.takeIf { it.team == Team.TEAM2 }?.score ?: history.opponentScore(item)
+                val team1Score: Score =
+                    item.takeIf { it.team == Team.TEAM1 }?.score ?: history.opponentScore(item)
+                val team2Score: Score =
+                    item.takeIf { it.team == Team.TEAM2 }?.score ?: history.opponentScore(item)
                 text = "${team1Score}-${team2Score} (${item.minute}\')"
                 textSize = 18f
                 gravity = Gravity.CENTER
 
                 if (item.team == Team.TEAM2) {
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Adjusted for dark mode
+                    setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.red
+                        )
+                    )
                 } else {
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
@@ -81,6 +108,7 @@ class MatchSummaryFragment : Fragment() {
         }
         container.addView(TextView(requireContext()))
         container.addView(TextView(requireContext()))
+        return container
     }
 
     companion object {
