@@ -208,7 +208,7 @@ class ScoreFragment(
             textSize = 14f
             setPadding(32, 24, 32, 0)
             gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)) // Set to white for dark mode
         }
 
         val builder = AlertDialog.Builder(requireContext())
@@ -219,10 +219,11 @@ class ScoreFragment(
                 val view = super.getView(position, convertView, parent) as TextView
                 val player = players[position]
 
+                view.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.black))
                 if (otherTeam.contains(player)) {
                     view.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark))
                 } else {
-                    view.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+                    view.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
                 }
 
                 return view
@@ -234,10 +235,21 @@ class ScoreFragment(
             onPlayerSelected(selectedPlayer)
         }
 
-        builder.setNegativeButton("Cancel", null)
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
 
-        builder.create().show()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            // Adjust button text colors for dark mode
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                ?.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
+        }
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.black) // Set dialog background to black
+        dialog.show()
     }
+
 
     private fun updateSharedHistory() {
         sharedViewModel.history = MutableLiveData(history)
