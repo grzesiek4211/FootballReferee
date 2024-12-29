@@ -36,7 +36,7 @@ class MatchSummaryFragment : Fragment() {
             text = "Summary"
             textSize = 24f
             gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
         summaryContainer.addView(titleTextView, 0)
     }
@@ -64,9 +64,9 @@ class MatchSummaryFragment : Fragment() {
                 gravity = Gravity.CENTER
 
                 if (item.team == Team.TEAM2) {
-                    setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Adjusted for dark mode
                 } else {
-                    setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
             }
             container.addView(scoreTextView, 2 * i + 1)
@@ -75,6 +75,7 @@ class MatchSummaryFragment : Fragment() {
                 text = item.scorerToString()
                 textSize = 16f
                 gravity = Gravity.CENTER
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
             }
             container.addView(scorerAssistantTextView, 2 * i + 2)
         }

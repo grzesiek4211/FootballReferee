@@ -1,214 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
+    <!-- Current Time -->
     <TextView
         android:id="@+id/current_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="00:00"
-        android:textColor="@android:color/black"
+        android:textColor="@color/white"
         android:textSize="16sp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <!-- Main Score Layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/score_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        >
+        android:layout_marginTop="24dp"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/score_team1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingEnd="16dp"
-            android:text="0"
-            android:textSize="72sp"
-            app:layout_constraintEnd_toStartOf="@+id/score_team2"
-            app:layout_constraintHorizontal_bias="0.75"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        <!-- Team 1 Name -->
         <TextView
             android:id="@+id/team1_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
             android:text="@string/team1_name"
+            android:textColor="@color/gray"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/score_team1"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintEnd_toStartOf="@+id/team2_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Team 2 Name -->
         <TextView
             android:id="@+id/team2_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:background="?attr/selectableItemBackground"
             android:text="@string/team2_name"
+            android:textColor="@color/gray"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/score_team2"
-            app:layout_constraintHorizontal_bias="1.05"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/team1_name"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Team 1 Score -->
+        <TextView
+            android:id="@+id/score_team1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="72sp"
+            app:layout_constraintEnd_toStartOf="@+id/score_team2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/team1_name" />
+
+        <!-- Team 2 Score -->
         <TextView
             android:id="@+id/score_team2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingStart="16dp"
             android:text="0"
+            android:textColor="@color/white"
             android:textSize="72sp"
+            app:layout_constraintStart_toEndOf="@+id/score_team1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.75"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toBottomOf="@id/team2_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Score Editor Layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/score_editor_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:visibility="gone"
-        >
-
-        <!-- Left Score -->
-        <TextView
-            android:id="@+id/dialog_score_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="48sp"
-            app:layout_constraintEnd_toStartOf="@+id/dialog_score_right"
-            app:layout_constraintHorizontal_bias="0.3"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Left Increment -->
-        <TextView
-            android:id="@+id/increment_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:text="▲"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@id/dialog_score_left"
-            app:layout_constraintEnd_toEndOf="@id/dialog_score_left"
-            app:layout_constraintStart_toStartOf="@id/dialog_score_left" />
-
-        <!-- Left Decrement -->
-        <TextView
-            android:id="@+id/decrement_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:text="▼"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@id/dialog_score_left"
-            app:layout_constraintStart_toStartOf="@id/dialog_score_left"
-            app:layout_constraintTop_toBottomOf="@id/dialog_score_left" />
-
-        <!-- Right Score -->
-        <TextView
-            android:id="@+id/dialog_score_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="48sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.7"
-            app:layout_constraintStart_toEndOf="@+id/dialog_score_left"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Right Increment -->
-        <TextView
-            android:id="@+id/increment_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:text="▲"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@id/dialog_score_right"
-            app:layout_constraintEnd_toEndOf="@id/dialog_score_right"
-            app:layout_constraintStart_toStartOf="@id/dialog_score_right" />
-
-        <!-- Right Decrement -->
-        <TextView
-            android:id="@+id/decrement_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:text="▼"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="@id/dialog_score_right"
-            app:layout_constraintStart_toStartOf="@id/dialog_score_right"
-            app:layout_constraintTop_toBottomOf="@id/dialog_score_right" />
-
-        <!-- Cancel Button -->
-        <TextView
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:minWidth="72dp"
-            android:minHeight="48dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="X"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@id/confirm_button"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/decrement_left" />
-
-        <!-- Confirm Button -->
-        <TextView
-            android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:minWidth="72dp"
-            android:minHeight="48dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="✔"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cancel_button"
-            app:layout_constraintTop_toBottomOf="@id/decrement_right" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>

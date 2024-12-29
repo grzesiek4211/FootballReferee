@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 
@@ -19,6 +20,7 @@ class TeamAdapter(private val players: List<String>) : RecyclerView.Adapter<Team
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.playerName.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
         holder.playerName.text = players[position]
     }
 

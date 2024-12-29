@@ -37,8 +37,8 @@ class TeamSetupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.team_setup_activity)
 
-        val myTeamRecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
-        val opponentRecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
+        val team1RecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
+        val team2RecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
         val addMyTeamMembers: Button = findViewById(R.id.addMyTeamMembers)
         val addOpponentTeamMembers: Button = findViewById(R.id.addOpponentTeamMembers)
         val startButton: Button = findViewById(R.id.startButton)
@@ -46,15 +46,15 @@ class TeamSetupActivity : AppCompatActivity() {
         val myTeamAdapter = TeamAdapter(myTeam)
         val opponentTeamAdapter = TeamAdapter(opponentTeam)
 
-        myTeamRecyclerView.layoutManager = LinearLayoutManager(this)
-        myTeamRecyclerView.adapter = myTeamAdapter
+        team1RecyclerView.layoutManager = LinearLayoutManager(this)
+        team1RecyclerView.adapter = myTeamAdapter
 
-        opponentRecyclerView.layoutManager = LinearLayoutManager(this)
-        opponentRecyclerView.adapter = opponentTeamAdapter
+        team2RecyclerView.layoutManager = LinearLayoutManager(this)
+        team2RecyclerView.adapter = opponentTeamAdapter
 
         val spacingInDp = resources.getDimensionPixelSize(R.dimen.recycler_spacing)
-        myTeamRecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
-        opponentRecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
+        team1RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
+        team2RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
 
         addMyTeamMembers.setOnClickListener {
             showPlayerSelectionDialog(
@@ -99,10 +99,10 @@ class TeamSetupActivity : AppCompatActivity() {
             setPadding(0, 16, 0, 0)
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(this@TeamSetupActivity, android.R.color.black))
+            setTextColor(ContextCompat.getColor(this@TeamSetupActivity, android.R.color.white))
         }
 
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
         builder.setCustomTitle(titleView)
 
         val checkedItems = BooleanArray(availablePlayers.size) { index ->
@@ -122,19 +122,28 @@ class TeamSetupActivity : AppCompatActivity() {
                 } else {
                     checkedItems[which] = false
                     alertDialog.listView.setItemChecked(which, false)
-                    Toast.makeText(this,
-                        getString(R.string.toast_team_setup, TEAM_PLAYERS_NUMBER), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.toast_team_setup, TEAM_PLAYERS_NUMBER),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
                 selectedPlayers.remove(selectedItem)
             }
 
             val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            positiveButton.text = getString(R.string.add_players_button_text, selectedPlayers.size, TEAM_PLAYERS_NUMBER)
+            positiveButton.text = getString(
+                R.string.add_players_button_text,
+                selectedPlayers.size,
+                TEAM_PLAYERS_NUMBER
+            )
             positiveButton.isEnabled = selectedPlayers.size == TEAM_PLAYERS_NUMBER
         }
 
-        builder.setPositiveButton(getString(R.string.add_players_button_text, 0, TEAM_PLAYERS_NUMBER)) { _, _ ->
+        builder.setPositiveButton(
+            getString(R.string.add_players_button_text, 0, TEAM_PLAYERS_NUMBER)
+        ) { _, _ ->
             if (selectedPlayers.isNotEmpty()) {
                 team.clear()
                 team.addAll(selectedPlayers)
@@ -148,10 +157,25 @@ class TeamSetupActivity : AppCompatActivity() {
 
         dialog.setOnShowListener {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            positiveButton.text = getString(R.string.add_players_button_text, selectedPlayers.size, TEAM_PLAYERS_NUMBER)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            positiveButton.text = getString(
+                R.string.add_players_button_text,
+                selectedPlayers.size,
+                TEAM_PLAYERS_NUMBER
+            )
             positiveButton.isEnabled = selectedPlayers.size == TEAM_PLAYERS_NUMBER
+            positiveButton.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            positiveButton.setPadding(32, 0, 32, 0)
+            positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+
+            negativeButton.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            negativeButton.setPadding(32, 0, 32, 0)
+            negativeButton.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
         }
+
 
         dialog.show()
     }
+
 }
