@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
-        android:padding="16dp"
+        android:paddingTop="24dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,6 +87,9 @@
                 android:background="@drawable/rounded_button_primary"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:text="Confirm"
                 android:textColor="@color/white" />
         </LinearLayout>
