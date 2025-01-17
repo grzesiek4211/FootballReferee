@@ -1,10 +1,10 @@
 package com.example.myapplication.presentation
 
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
@@ -107,19 +107,13 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
     }
 
     private fun triggerAlarm() {
-        val requireContext = requireContext()
-        vibrator = requireContext.getSystemService(Vibrator::class.java)
-        vibrator?.vibrate(VibrationEffect.createOneShot(60000, VibrationEffect.DEFAULT_AMPLITUDE))
-        mediaPlayer = MediaPlayer.create(requireContext, R.raw.google_duo)
-        mediaPlayer?.start()
+        val alarmServiceIntent = Intent(requireContext(), AlarmService::class.java)
+        requireContext().startService(alarmServiceIntent)
     }
 
     private fun stopAlarm() {
-        vibrator?.cancel()
-
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        val alarmServiceIntent = Intent(requireContext(), AlarmService::class.java)
+        requireContext().stopService(alarmServiceIntent)
     }
 
     override fun onDestroyView() {
