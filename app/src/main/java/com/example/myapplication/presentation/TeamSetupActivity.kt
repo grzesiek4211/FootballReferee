@@ -20,7 +20,7 @@ class TeamSetupActivity : AppCompatActivity() {
 
     companion object {
         val playerNames: List<String> = listOf(
-            "Bartłomiej M.", "Bartosz G.", "Dave Pe", "Eryk S.", "Filip N.", "Filip O.", "Grzegorz K.",
+            "Bartłomiej M.", "Bartosz G.", "Damian W.", "Dave Pe", "Eryk S.", "Filip N.", "Filip O.", "Grzegorz K.",
             "Hubert J.", "Igor S.", "Jakub W.", "Jan S.", "Janusz G.", "Jarek J.", "Joannis P.",
             "Julian T.", "Kacper K.", "Kamil S.", "Karol S.", "Konrad O.", "Konrad R.", "Krzysztof Sz.",
             "Kuba G.", "Maciej P.", "Marek Cz.", "Marek S.", "Martin S.", "Mateusz M.", "Mateusz R.",
