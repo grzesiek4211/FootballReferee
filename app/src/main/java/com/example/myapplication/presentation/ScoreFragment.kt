@@ -93,30 +93,56 @@ class ScoreFragment(
     ) {
         var scorer: String
         var assistant: String? = null
-        val extendedList = mutableListOf("---NONE---")
-        extendedList.addAll(scoringTeam)
-        extendedList.addAll(otherTeam)
-        showPlayerListDialog("Select goal scorer", extendedList, otherTeam) { selectedScorer ->
-            scorer = selectedScorer
+        val extendedScorerList = mutableListOf("---NONE---")
+        extendedScorerList.addAll(scoringTeam)
+        extendedScorerList.addAll(otherTeam)
+        val extendedAssistantList = mutableListOf("---NONE---")
+        extendedAssistantList.addAll(scoringTeam)
+        if(scoringTeam.isNotEmpty() && otherTeam.isNotEmpty()) {
+            showPlayerListDialog("Select goal scorer", extendedScorerList, otherTeam) { selectedScorer ->
+                scorer = selectedScorer
 
-            showPlayerListDialog("Select goal assistant", extendedList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
-                if (selectedAssistant != "---NONE---") {
-                    assistant = selectedAssistant
-                    Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT).show()
+                showPlayerListDialog("Select goal assistant", extendedAssistantList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
+                    if (selectedAssistant != "---NONE---") {
+                        assistant = selectedAssistant
+                        Toast.makeText(
+                            requireContext(),
+                            "Goal scorer: $scorer ($assistant)",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    currentScore.increment()
+                    scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
+                    history.add(
+                        HistoryItem(
+                            Score(scoreTextView.text.toString().toInt()),
+                            team,
+                            scorer,
+                            otherTeam.contains(scorer),
+                            java.time.Duration.between(matchStartTime, Instant.now()).toMinutes()
+                                .toInt() + 1,
+                            assistant
+                        )
+                    )
                 }
-                currentScore.increment()
-                scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
-                history.add(HistoryItem(
+            }
+        } else {
+            currentScore.increment()
+            scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
+            history.add(
+                HistoryItem(
                     Score(scoreTextView.text.toString().toInt()),
                     team,
-                    scorer,
-                    otherTeam.contains(scorer),
-                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
-                    assistant
-                ))
-            }
+                    "",
+                    false,
+                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes()
+                        .toInt() + 1,
+                    null
+                )
+            )
         }
     }
 
