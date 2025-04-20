@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
-import java.time.Instant
+import java.time.LocalDateTime
 
 class StopFragment : Fragment() {
 
@@ -78,7 +78,7 @@ class StopFragment : Fragment() {
     private fun saveScreenshotToMediaStore(bitmap: Bitmap) {
         try {
             val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "screenshot_summary_${Instant.now().epochSecond}.png")
+                put(MediaStore.Images.Media.DISPLAY_NAME, "${LocalDateTime.now()}_screenshot_summary.png")
                 put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots")
             }
