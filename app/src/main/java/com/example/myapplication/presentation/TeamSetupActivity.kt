@@ -24,8 +24,8 @@ class TeamSetupActivity : AppCompatActivity() {
             "Hubert J.", "Igor S.", "Jakub W.", "Jan S.", "Janusz G.", "Jarek J.", "Joannis P.",
             "Julian T.", "Kacper K.", "Kamil S.", "Karol S.", "Konrad O.", "Konrad R.", "Krzysztof Sz.",
             "Kuba G.", "Maciej P.", "Marek Cz.", "Marek S.", "Martin S.", "Mateusz M.", "Mateusz R.",
-            "Olaf Ś.", "Przemek P.", "Przemo M.", "Robert S.", "Sebastian F.", "Tomasz K.", "Vitalii V.",
-            "Wojtek G.",
+            "Michał Z.", "Olaf Ś.", "Przemek P.", "Przemo M.", "Robert S.", "Sebastian F.", "Tomasz K.",
+            "Vitalii V.", "Wojtek G.",
             "Player1", "Player2", "Player3", "Player4", "Player5", "Player6", "Player7",
             "Player8", "Player9", "Player10", "Player11", "Player12", "Player13", "Player14"
         )
