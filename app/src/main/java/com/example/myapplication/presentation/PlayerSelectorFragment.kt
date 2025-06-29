@@ -55,16 +55,30 @@ class PlayerSelectorFragment : Fragment() {
         }
 
         team1Selector.setOnClickListener {
-            showPlayerSelectionDialog("Select Player", team1Players) { selected ->
-                selectedTeam1Player = selected
-                team1Selector.text = selected
+            if(team1Players.isNotEmpty()) {
+                showPlayerSelectionDialog("Select Player", team1Players) { selected ->
+                    selectedTeam1Player = selected
+                    team1Selector.text = selected
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Team is empty",
+                    Toast.LENGTH_SHORT).show()
             }
         }
 
         team2Selector.setOnClickListener {
-            showPlayerSelectionDialog("Select Player", team2Players) { selected ->
-                selectedTeam2Player = selected
-                team2Selector.text = selected
+            if(team2Players.isNotEmpty()) {
+                showPlayerSelectionDialog("Select Player", team2Players) { selected ->
+                    selectedTeam2Player = selected
+                    team2Selector.text = selected
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Team is empty",
+                    Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -84,6 +98,12 @@ class PlayerSelectorFragment : Fragment() {
                 selectedTeam2Player = null
                 team1Selector.text = getString(R.string.select_player)
                 team2Selector.text = getString(R.string.select_player)
+            } else if (team2Players.isEmpty() || team1Players.isNotEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Feature unavailable when team is empty",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Toast.makeText(
                     requireContext(),
