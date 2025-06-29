@@ -16,4 +16,25 @@ class History(val history: MutableList<HistoryItem> = mutableListOf()) {
         val copiedHistory = history.map { it.deepCopy() }.toMutableList()
         return History(copiedHistory)
     }
+
+
+    fun toPlayerStatistics(): List<PlayerStatistic> {
+        val stats = mutableMapOf<String, PlayerStatistic>()
+
+        for (item in history) {
+            if (!item.ownGoal) {
+                val scorerName = item.scorer
+                val current = stats.getOrDefault(scorerName, PlayerStatistic(scorerName, 0, 0, item.team))
+                stats[scorerName] = current.copy(goals = current.goals + 1)
+            }
+
+            val assistantName = item.assistant
+            if (!assistantName.isNullOrBlank()) {
+                val current = stats.getOrDefault(assistantName, PlayerStatistic(assistantName, 0, 0, item.team))
+                stats[assistantName] = current.copy(assists = current.assists + 1)
+            }
+        }
+
+        return stats.values.toList()
+    }
 }

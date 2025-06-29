@@ -86,12 +86,7 @@ class MatchSummaryFragment() : Fragment() {
                 gravity = Gravity.CENTER
 
                 if (item.team == Team.TEAM2) {
-                    setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.red
-                        )
-                    )
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
                 } else {
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
@@ -102,13 +97,44 @@ class MatchSummaryFragment() : Fragment() {
                 text = item.scorerToString()
                 textSize = 16f
                 gravity = Gravity.CENTER
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                if (item.team == Team.TEAM2) {
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.pink))
+                } else {
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+                }
             }
             container.addView(scorerAssistantTextView, 2 * i + 2)
         }
         container.addView(TextView(requireContext()))
+        printCanadian(container, history)
         container.addView(TextView(requireContext()))
         return container
+    }
+
+    private fun printCanadian(container: LinearLayout, history: History) {
+        val canadianClassification = history.toPlayerStatistics()
+            .sortedWith(compareByDescending<PlayerStatistic> { it.goals + 0.5 * it.assists }
+                .thenBy { it.name })
+
+        container.addView(TextView(requireContext()).apply {
+            text = "Canadian Classification:"
+            textSize = 18f
+            gravity = Gravity.CENTER
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        })
+        canadianClassification.map {
+            val candianItemTextView = TextView(requireContext()).apply {
+                text = it.toString()
+                textSize = 16f
+                gravity = Gravity.CENTER
+                if (it.team == Team.TEAM2) {
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.pink))
+                } else {
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
+                }
+            }
+            container.addView(candianItemTextView)
+        }
     }
 
     companion object {
