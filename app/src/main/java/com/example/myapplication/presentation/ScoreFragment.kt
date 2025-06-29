@@ -1,6 +1,5 @@
 package com.example.myapplication.presentation
 
-
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,14 +16,11 @@ import com.example.myapplication.R
 import java.time.Instant
 
 class ScoreFragment(
-    var team1: List<String>,
-    var team2: List<String>,
     private val matchStartTime: Instant
 ) : CurrentTimeFragment(R.layout.score_fragment, R.id.current_time) {
 
     companion object {
-        fun newInstance(team1: ArrayList<String>, team2: ArrayList<String>, matchStartTime: Instant) =
-            ScoreFragment(team1, team2, matchStartTime)
+        fun newInstance(matchStartTime: Instant) = ScoreFragment(matchStartTime)
     }
 
     private lateinit var scoreTextViewTeam1: TextView
@@ -32,10 +28,14 @@ class ScoreFragment(
     private lateinit var scoreFragmentView: View
 
     private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var sharedTeamViewModel: SharedTeamViewModel
     private var history: History = History()
     private var editableHistory = history.copy()
     private var backupScoreTeam1: Score = Score(0)
     private var backupScoreTeam2: Score = Score(0)
+
+    private var team1: List<String> = emptyList()
+    private var team2: List<String> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +43,16 @@ class ScoreFragment(
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
         super.onCreate(savedInstanceState)
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        sharedTeamViewModel = ViewModelProvider(requireActivity())[SharedTeamViewModel::class.java]
+
+        sharedTeamViewModel.team1.observe(viewLifecycleOwner) {
+            team1 = it
+        }
+        sharedTeamViewModel.team2.observe(viewLifecycleOwner) {
+            team2 = it
+        }
+
         initScoreView(view)
 
         return view
@@ -51,17 +60,10 @@ class ScoreFragment(
 
     private fun initScoreView(view: View) {
         scoreFragmentView = view.findViewById(R.id.score_layout)
-        initScoreTeam1(view)
-        initScoreTeam2(view)
-    }
-
-    private fun initScoreTeam1(view: View) {
         scoreTextViewTeam1 = view.findViewById(R.id.score_team1)
-        initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
-    }
-
-    private fun initScoreTeam2(view: View) {
         scoreTextViewTeam2 = view.findViewById(R.id.score_team2)
+
+        initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
         initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
     }
 
@@ -98,7 +100,7 @@ class ScoreFragment(
         extendedScorerList.addAll(otherTeam)
         val extendedAssistantList = mutableListOf("---NONE---")
         extendedAssistantList.addAll(scoringTeam)
-        if(scoringTeam.isNotEmpty() && otherTeam.isNotEmpty()) {
+        if (scoringTeam.isNotEmpty() && otherTeam.isNotEmpty()) {
             showPlayerListDialog("Select goal scorer", extendedScorerList, otherTeam) { selectedScorer ->
                 scorer = selectedScorer
 
@@ -122,8 +124,7 @@ class ScoreFragment(
                             team,
                             scorer,
                             otherTeam.contains(scorer),
-                            java.time.Duration.between(matchStartTime, Instant.now()).toMinutes()
-                                .toInt() + 1,
+                            java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
                             assistant
                         )
                     )
@@ -138,8 +139,7 @@ class ScoreFragment(
                     team,
                     "",
                     false,
-                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes()
-                        .toInt() + 1,
+                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
                     null
                 )
             )
@@ -266,10 +266,5 @@ class ScoreFragment(
 
     private fun updateSharedHistory() {
         sharedViewModel.history = MutableLiveData(history)
-    }
-
-    fun updateTeams(updatedTeam1: List<String>, updatedTeam2: List<String>) {
-        team1 = updatedTeam1
-        team2 = updatedTeam2
     }
 }
