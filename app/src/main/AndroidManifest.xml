@@ -20,7 +20,7 @@
 
         <activity
             android:name=".presentation.FullScreenAlarmActivity"
-            android:exported="false" android:showOnLockScreen="true" android:turnScreenOn="true" android:excludeFromRecents="true" android:taskAffinity="" android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <uses-library
+            android:exported="false" android:showOnLockScreen="true" android:turnScreenOn="true" android:excludeFromRecents="true" android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
 
@@ -31,7 +31,6 @@
         <activity
             android:name=".presentation.TimerSetupActivity"
             android:exported="true"
-            android:taskAffinity=""
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,13 +41,12 @@
         <activity
             android:name=".presentation.TeamSetupActivity"
             android:exported="true"
-            android:taskAffinity=""
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
