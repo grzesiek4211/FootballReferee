@@ -100,17 +100,19 @@
             app:layout_constraintTop_toBottomOf="@id/dialog_score_right" />
 
         <!-- Cancel Button -->
+
+        <!-- Confirm Button -->
         <TextView
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:minWidth="72dp"
             android:minHeight="48dp"
-            android:clickable="true"
-            android:focusable="true"
             android:text="X"
             android:textColor="@color/red"
             android:textSize="24sp"
@@ -119,20 +121,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/decrement_left" />
 
-        <!-- Confirm Button -->
         <TextView
             android:id="@+id/confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:minWidth="72dp"
             android:minHeight="48dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="@color/green"
             android:text="✔"
+            android:textColor="@color/green"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cancel_button"

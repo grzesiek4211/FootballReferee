@@ -3,10 +3,10 @@ package com.example.myapplication.presentation
 class HistoryItem(
     val score: Score,
     val team: Team,
-    private val scorer: String,
-    private val ownGoal: Boolean = false,
+    val scorer: String,
+    val ownGoal: Boolean = false,
     val minute: Int,
-    private val assistant: String?
+    val assistant: String?
 ) {
 
     fun deepCopy(): HistoryItem {
