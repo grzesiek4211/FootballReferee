@@ -1,6 +1,10 @@
 package com.example.myapplication.presentation
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.InputDevice
@@ -12,6 +16,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.Instant
 import java.time.format.DateTimeParseException
+import androidx.core.app.NotificationCompat
+import androidx.wear.ongoing.OngoingActivity
+import androidx.wear.ongoing.Status.Builder
+import androidx.wear.ongoing.Status.TextPart
 
 const val DEFAULT_TIME_DURATION_MINUTES = 5L
 
@@ -24,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_MY_TEAM = "MY_TEAM"
         const val EXTRA_OPPONENT_TEAM = "OPPONENT_TEAM"
         const val EXTRA_MATCH_START_TIME = "MATCH_START_TIME" // Key for Intent extra
-        const val ACTION_SHOW_TIMER = "com.example.myapplication.ACTION_SHOW_TIMER"
+        const val ONGOING_NOTIFICATION_ID = 456
+        private const val ONGOING_CHANNEL_ID = "ongoing_timer"
     }
 
     private var timerDuration: Long = DEFAULT_TIME_DURATION_MINUTES * 60 * 1000L // Default in milliseconds
@@ -68,6 +77,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: PagerAdapter created with timerDuration=${timerDuration/1000}s, matchStartTime=$matchStartTime")
 
         setNotClickablePageIndicators(viewPager)
+
+        startOngoingChip()
     }
 
     private fun initFromIntentOrDefaults() {
@@ -144,5 +155,48 @@ class MainActivity : AppCompatActivity() {
         if (prevItem >= 0) {
             viewPager.currentItem = prevItem
         }
+    }
+
+    private fun startOngoingChip() {
+        createOngoingNotificationChannel()
+
+        val contentIntent = Intent(this, MainActivity::class.java).let {
+            PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        val builder = NotificationCompat.Builder(this, ONGOING_CHANNEL_ID)
+            .setSmallIcon(R.mipmap.football_13302)
+            .setContentTitle("Match in progress")
+            .setContentText("Tap to open")
+            .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(contentIntent)
+
+        val ongoingActivityStatus = Builder()
+            .addPart("timer_status", TextPart("Match in progress"))
+            .build()
+
+        val ongoingActivity = OngoingActivity.Builder(this, ONGOING_NOTIFICATION_ID, builder)
+            .setStaticIcon(R.mipmap.football_13302)
+            .setTouchIntent(contentIntent)
+            .setStatus(ongoingActivityStatus)
+            .build()
+
+        ongoingActivity.apply(this)
+
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(ONGOING_NOTIFICATION_ID, builder.build())
+    }
+
+    private fun createOngoingNotificationChannel() {
+        val channel = NotificationChannel(
+            ONGOING_CHANNEL_ID,
+            "Ongoing Timer",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Match in progress"
+        }
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
     }
 }

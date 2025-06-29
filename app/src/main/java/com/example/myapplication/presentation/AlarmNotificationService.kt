@@ -13,6 +13,9 @@ import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.example.myapplication.R
 import android.util.Log
+import androidx.wear.ongoing.OngoingActivity
+import androidx.wear.ongoing.Status.Builder
+import androidx.wear.ongoing.Status.TextPart
 
 
 class AlarmNotificationService : Service() {
@@ -21,7 +24,7 @@ class AlarmNotificationService : Service() {
     private var vibrator: Vibrator? = null
     private val NOTIFICATION_ID = 123 // Unikalne ID powiadomienia
     private val NOTIFICATION_CHANNEL_ID = "timer_alarm_channel"
-    private val NOTIFICATION_CHANNEL_NAME = "Alarmy Minutnika"
+    private val NOTIFICATION_CHANNEL_NAME = "timer alarm channel name"
 
     override fun onCreate() {
         super.onCreate()
@@ -55,7 +58,7 @@ class AlarmNotificationService : Service() {
                 NOTIFICATION_CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Powiadomienia dla zakończonych minutników."
+                description = "Notification for timer"
                 enableVibration(true)
                 setSound(Settings.System.DEFAULT_ALARM_ALERT_URI,
                     AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build())
@@ -91,12 +94,10 @@ class AlarmNotificationService : Service() {
         )
         Log.d("AlarmNotificationService", "Content PendingIntent created with flags: ${contentIntent.flags}")
 
-
-
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.mipmap.football_13302)
-            .setContentTitle("Minutnik skończony!")
-            .setContentText("Twój czas minął.")
+            .setContentTitle("Time is up!")
+            .setContentText("Tap to open")
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setAutoCancel(true)
