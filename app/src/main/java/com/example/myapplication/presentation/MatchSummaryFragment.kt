@@ -113,7 +113,9 @@ class MatchSummaryFragment() : Fragment() {
 
     private fun printCanadian(container: LinearLayout, history: History) {
         val canadianClassification = history.toPlayerStatistics()
-            .sortedWith(compareByDescending<PlayerStatistic> { it.goals + 0.5 * it.assists }
+            .filter { !it.name.contains("NONE") }
+            .sortedWith(compareByDescending<PlayerStatistic> { it.goals + it.assists }
+                .thenByDescending  { it.goals }
                 .thenBy { it.name })
 
         container.addView(TextView(requireContext()).apply {
