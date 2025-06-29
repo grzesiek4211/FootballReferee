@@ -31,8 +31,7 @@
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/changeTeamsTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/team2Label"
-        />
+        app:layout_constraintEnd_toStartOf="@id/team2Label" />
 
     <!-- Team 2 Label -->
     <TextView
@@ -46,9 +45,9 @@
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/changeTeamsTitle"
         app:layout_constraintStart_toEndOf="@id/team1Label"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Team 1 Selector -->
     <TextView
         android:id="@+id/team1Selector"
         android:layout_width="0dp"
@@ -61,10 +60,9 @@
         app:layout_constraintTop_toBottomOf="@id/team1Label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/team2Selector"
-        app:layout_constraintWidth_percent="0.5"
-        />
+        app:layout_constraintWidth_percent="0.5" />
 
-
+    <!-- Team 2 Selector -->
     <TextView
         android:id="@+id/team2Selector"
         android:layout_width="0dp"
@@ -79,6 +77,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />
 
+    <!-- Barrier below both selectors -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/selectorsBottomBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="team1Selector,team2Selector" />
+
     <!-- Confirm Button -->
     <Button
         android:id="@+id/confirmButton"
@@ -87,10 +93,9 @@
         android:text="Confirm"
         android:background="@drawable/rounded_button_primary"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/team1Selector"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="@id/team2Selector"
+        app:layout_constraintTop_toBottomOf="@id/selectorsBottomBarrier"
         app:layout_constraintStart_toStartOf="@id/team1Selector"
-    />
+        app:layout_constraintEnd_toEndOf="@id/team2Selector"
+        android:layout_marginTop="24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
