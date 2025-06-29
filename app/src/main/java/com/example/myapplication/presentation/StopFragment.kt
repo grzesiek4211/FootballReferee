@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
+import com.example.myapplication.presentation.MainActivity.Companion.ONGOING_NOTIFICATION_ID
 import com.example.myapplication.presentation.TimerFragment.Companion.TIMER_REQUEST_CODE
 import java.time.LocalDateTime
 
@@ -59,6 +60,9 @@ class StopFragment : Fragment() {
 
         confirmButton.setOnClickListener {
             cancelTimerAndAlarm()
+            val notificationManager =
+                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+            notificationManager.cancel(ONGOING_NOTIFICATION_ID)
             saveScreenshotToMediaStore(sharedScreenshotViewModel.bitmap.value!!)
             restartApp()
         }

@@ -24,7 +24,7 @@ class AlarmNotificationService : Service() {
     private var vibrator: Vibrator? = null
     private val NOTIFICATION_ID = 123 // Unikalne ID powiadomienia
     private val NOTIFICATION_CHANNEL_ID = "timer_alarm_channel"
-    private val NOTIFICATION_CHANNEL_NAME = "Alarmy Minutnika"
+    private val NOTIFICATION_CHANNEL_NAME = "timer alarm channel name"
 
     override fun onCreate() {
         super.onCreate()
@@ -58,7 +58,7 @@ class AlarmNotificationService : Service() {
                 NOTIFICATION_CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Powiadomienia dla zakończonych minutników."
+                description = "Notification for timer"
                 enableVibration(true)
                 setSound(Settings.System.DEFAULT_ALARM_ALERT_URI,
                     AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build())
@@ -94,32 +94,16 @@ class AlarmNotificationService : Service() {
         )
         Log.d("AlarmNotificationService", "Content PendingIntent created with flags: ${contentIntent.flags}")
 
-
-
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.mipmap.football_13302)
-            .setContentTitle("Minutnik skończony!")
-            .setContentText("Dotknij, aby otworzyć")
+            .setContentTitle("Time is up!")
+            .setContentText("Tap to open")
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setOngoing(true)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentIntent(contentPendingIntent)
-
-
-        val ongoingActivityStatus = Builder()
-            .addPart("timer_status", TextPart("Minutnik działa"))
-            .build()
-
-        val ongoingActivity = OngoingActivity.Builder(this, NOTIFICATION_ID, builder)
-            .setStaticIcon(R.mipmap.football_13302)
-            .setTouchIntent(contentPendingIntent)
-            .setStatus(ongoingActivityStatus)
-            .build()
-
-        ongoingActivity.apply(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             builder.setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
