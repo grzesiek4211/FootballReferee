@@ -48,9 +48,11 @@ class ScoreFragment(
 
         sharedTeamViewModel.team1.observe(viewLifecycleOwner) {
             team1 = it
+            initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
         }
         sharedTeamViewModel.team2.observe(viewLifecycleOwner) {
             team2 = it
+            initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
         }
 
         initScoreView(view)
@@ -62,9 +64,8 @@ class ScoreFragment(
         scoreFragmentView = view.findViewById(R.id.score_layout)
         scoreTextViewTeam1 = view.findViewById(R.id.score_team1)
         scoreTextViewTeam2 = view.findViewById(R.id.score_team2)
-
-        initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
-        initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
+        scoreTextViewTeam1.text = "0"
+        scoreTextViewTeam2.text = "0"
     }
 
     private fun initScore(
@@ -82,7 +83,6 @@ class ScoreFragment(
             editScoreViewAsDialog()
             true
         }
-        scoreTextView.text = "0"
     }
 
     private fun incrementScore(
@@ -100,7 +100,7 @@ class ScoreFragment(
         extendedScorerList.addAll(otherTeam)
         val extendedAssistantList = mutableListOf("---NONE---")
         extendedAssistantList.addAll(scoringTeam)
-        if (scoringTeam.isNotEmpty() && otherTeam.isNotEmpty()) {
+        if (scoringTeam.isNotEmpty() || otherTeam.isNotEmpty()) {
             showPlayerListDialog("Select goal scorer", extendedScorerList, otherTeam) { selectedScorer ->
                 scorer = selectedScorer
 
