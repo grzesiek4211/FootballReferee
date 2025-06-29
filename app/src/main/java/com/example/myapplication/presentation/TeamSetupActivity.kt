@@ -31,8 +31,8 @@ class TeamSetupActivity : AppCompatActivity() {
         )
     }
 
-    private val myTeam: MutableList<String> = mutableListOf()
-    private val opponentTeam: MutableList<String> = mutableListOf()
+    private val team1: MutableList<String> = mutableListOf()
+    private val team2: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,48 +40,48 @@ class TeamSetupActivity : AppCompatActivity() {
 
         val team1RecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
         val team2RecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
-        val addMyTeamMembers: Button = findViewById(R.id.addMyTeamMembers)
-        val addOpponentTeamMembers: Button = findViewById(R.id.addOpponentTeamMembers)
+        val addTeam1Members: Button = findViewById(R.id.addMyTeamMembers)
+        val addTeam2Members: Button = findViewById(R.id.addOpponentTeamMembers)
         val startButton: Button = findViewById(R.id.startButton)
 
-        val myTeamAdapter = TeamAdapter(myTeam)
-        val opponentTeamAdapter = TeamAdapter(opponentTeam)
+        val team1Adapter = TeamAdapter(team1)
+        val team2Adapter = TeamAdapter(team2)
 
         team1RecyclerView.layoutManager = LinearLayoutManager(this)
-        team1RecyclerView.adapter = myTeamAdapter
+        team1RecyclerView.adapter = team1Adapter
 
         team2RecyclerView.layoutManager = LinearLayoutManager(this)
-        team2RecyclerView.adapter = opponentTeamAdapter
+        team2RecyclerView.adapter = team2Adapter
 
         val spacingInDp = resources.getDimensionPixelSize(R.dimen.recycler_spacing)
         team1RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
         team2RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
 
-        addMyTeamMembers.setOnClickListener {
+        addTeam1Members.setOnClickListener {
             showPlayerSelectionDialog(
                 title = getString(R.string.select_my_team),
-                team = myTeam,
-                adapter = myTeamAdapter,
-                otherTeam = opponentTeam
+                team = team1,
+                adapter = team1Adapter,
+                otherTeam = team2
             )
         }
 
-        addOpponentTeamMembers.setOnClickListener {
+        addTeam2Members.setOnClickListener {
             showPlayerSelectionDialog(
                 title = getString(R.string.select_opponents),
-                team = opponentTeam,
-                adapter = opponentTeamAdapter,
-                otherTeam = myTeam
+                team = team2,
+                adapter = team2Adapter,
+                otherTeam = team1
             )
         }
 
         startButton.setOnClickListener {
-            intent.setClass(this, MainActivity::class.java)
-            intent.putStringArrayListExtra("MY_TEAM", ArrayList(myTeam))
-            intent.putStringArrayListExtra("OPPONENT_TEAM", ArrayList(opponentTeam))
-            intent.putExtra("MATCH_START_TIME", Instant.now().toString())
-            startActivity(intent)
-            finish()  // Close this activity to prevent going back to it
+                intent.setClass(this, MainActivity::class.java)
+                intent.putStringArrayListExtra("MY_TEAM", ArrayList(team1))
+                intent.putStringArrayListExtra("OPPONENT_TEAM", ArrayList(team2))
+                intent.putExtra("MATCH_START_TIME", Instant.now().toString())
+                startActivity(intent)
+                finish()  // Close this activity to prevent going back to it
         }
     }
 

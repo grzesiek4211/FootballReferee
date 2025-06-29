@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import java.time.Instant
 import java.time.format.DateTimeParseException
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status.Builder
 import androidx.wear.ongoing.Status.TextPart
@@ -71,8 +72,11 @@ class MainActivity : AppCompatActivity() {
             initFromIntentOrDefaults()
         }
 
+        val sharedTeamViewModel = ViewModelProvider(this)[SharedTeamViewModel::class.java]
+        sharedTeamViewModel.initTeams(myTeam, opponentTeam)
+
         val viewPager: ViewPager2 = findViewById(R.id.viewPager)
-        val pagerAdapter = PagerAdapter(this, timerDuration, myTeam, opponentTeam, matchStartTime)
+        val pagerAdapter = PagerAdapter(this, timerDuration, matchStartTime)
         viewPager.adapter = pagerAdapter
         Log.d(TAG, "onCreate: PagerAdapter created with timerDuration=${timerDuration/1000}s, matchStartTime=$matchStartTime")
 

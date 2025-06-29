@@ -24,13 +24,13 @@ class History(val history: MutableList<HistoryItem> = mutableListOf()) {
         for (item in history) {
             if (!item.ownGoal) {
                 val scorerName = item.scorer
-                val current = stats.getOrDefault(scorerName, PlayerStatistic(scorerName, 0, 0, item.team))
+                val current = stats.getOrDefault(scorerName, PlayerStatistic(scorerName, 0, 0))
                 stats[scorerName] = current.copy(goals = current.goals + 1)
             }
 
             val assistantName = item.assistant
             if (!assistantName.isNullOrBlank()) {
-                val current = stats.getOrDefault(assistantName, PlayerStatistic(assistantName, 0, 0, item.team))
+                val current = stats.getOrDefault(assistantName, PlayerStatistic(assistantName, 0, 0))
                 stats[assistantName] = current.copy(assists = current.assists + 1)
             }
         }

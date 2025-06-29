@@ -114,9 +114,11 @@ class MatchSummaryFragment() : Fragment() {
     private fun printCanadian(container: LinearLayout, history: History) {
         val canadianClassification = history.toPlayerStatistics()
             .filter { !it.name.contains("NONE") && it.name.isNotEmpty() }
-            .sortedWith(compareByDescending<PlayerStatistic> { it.goals + it.assists }
-                .thenByDescending  { it.goals }
-                .thenBy { it.name })
+            .sortedWith(
+                compareByDescending<PlayerStatistic> { it.goals + it.assists }
+                    .thenByDescending { it.goals }
+                    .thenBy { it.name }
+            )
 
         container.addView(TextView(requireContext()).apply {
             text = "Canadian Classification:"
@@ -124,20 +126,18 @@ class MatchSummaryFragment() : Fragment() {
             gravity = Gravity.CENTER
             setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         })
-        canadianClassification.map {
-            val candianItemTextView = TextView(requireContext()).apply {
+
+        canadianClassification.forEach {
+            val canadianItemTextView = TextView(requireContext()).apply {
                 text = it.toString()
                 textSize = 16f
                 gravity = Gravity.CENTER
-                if (it.team == Team.TEAM2) {
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.pink))
-                } else {
-                    setTextColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
-                }
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.light_gray))
             }
-            container.addView(candianItemTextView)
+            container.addView(canadianItemTextView)
         }
     }
+
 
     companion object {
         fun newInstance(): MatchSummaryFragment {
