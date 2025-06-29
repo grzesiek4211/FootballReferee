@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.core.splashscreen)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.wear.ongoing)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
