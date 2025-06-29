@@ -101,7 +101,7 @@ class PlayerSelectorFragment : Fragment() {
             } else if (team2Players.isEmpty() || team1Players.isNotEmpty()) {
                 Toast.makeText(
                     requireContext(),
-                    "Feature unavailable when team is empty",
+                    "Feature unavailable - team is empty",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
