@@ -1,0 +1,96 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/changeTeamsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change teams"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Team 1 Label -->
+    <TextView
+        android:id="@+id/team1Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Team 1"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/changeTeamsTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/team2Label"
+        />
+
+    <!-- Team 2 Label -->
+    <TextView
+        android:id="@+id/team2Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Team 2"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/changeTeamsTitle"
+        app:layout_constraintStart_toEndOf="@id/team1Label"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/team1Selector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/select_player"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/team1Label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/team2Selector"
+        app:layout_constraintWidth_percent="0.5"
+        />
+
+
+    <TextView
+        android:id="@+id/team2Selector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/select_player"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/team2Label"
+        app:layout_constraintStart_toEndOf="@id/team1Selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:background="@drawable/rounded_button_primary"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/team1Selector"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

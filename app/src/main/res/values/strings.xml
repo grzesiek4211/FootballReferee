@@ -8,4 +8,5 @@
     <string name="select_my_team">Select My Team</string>
     <string name="select_opponents">Select Opponents</string>
     <string name="toast_team_setup">You can only select up to %1$d players.</string>
+    <string name="select_player">Select Player</string>
 </resources>

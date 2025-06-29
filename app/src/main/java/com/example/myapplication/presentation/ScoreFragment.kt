@@ -17,8 +17,8 @@ import com.example.myapplication.R
 import java.time.Instant
 
 class ScoreFragment(
-    private val team1: List<String>,
-    private val team2: List<String>,
+    var team1: List<String>,
+    var team2: List<String>,
     private val matchStartTime: Instant
 ) : CurrentTimeFragment(R.layout.score_fragment, R.id.current_time) {
 
@@ -264,8 +264,12 @@ class ScoreFragment(
         dialog.show()
     }
 
-
     private fun updateSharedHistory() {
         sharedViewModel.history = MutableLiveData(history)
+    }
+
+    fun updateTeams(updatedTeam1: List<String>, updatedTeam2: List<String>) {
+        team1 = updatedTeam1
+        team2 = updatedTeam2
     }
 }
