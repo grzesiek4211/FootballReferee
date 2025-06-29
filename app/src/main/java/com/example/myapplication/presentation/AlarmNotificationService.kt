@@ -13,6 +13,9 @@ import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.example.myapplication.R
 import android.util.Log
+import androidx.wear.ongoing.OngoingActivity
+import androidx.wear.ongoing.Status.Builder
+import androidx.wear.ongoing.Status.TextPart
 
 
 class AlarmNotificationService : Service() {
@@ -96,13 +99,27 @@ class AlarmNotificationService : Service() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.mipmap.football_13302)
             .setContentTitle("Minutnik skończony!")
-            .setContentText("Twój czas minął.")
+            .setContentText("Dotknij, aby otworzyć")
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setOngoing(true)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentIntent(contentPendingIntent)
+
+
+        val ongoingActivityStatus = Builder()
+            .addPart("timer_status", TextPart("Minutnik działa"))
+            .build()
+
+        val ongoingActivity = OngoingActivity.Builder(this, NOTIFICATION_ID, builder)
+            .setStaticIcon(R.mipmap.football_13302)
+            .setTouchIntent(contentPendingIntent)
+            .setStatus(ongoingActivityStatus)
+            .build()
+
+        ongoingActivity.apply(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             builder.setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
