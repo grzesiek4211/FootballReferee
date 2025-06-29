@@ -2,6 +2,7 @@ package com.example.myapplication.presentation
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -20,6 +21,8 @@ import com.example.myapplication.R
 import com.example.myapplication.presentation.MainActivity.Companion.ONGOING_NOTIFICATION_ID
 import com.example.myapplication.presentation.TimerFragment.Companion.TIMER_REQUEST_CODE
 import java.time.LocalDateTime
+
+private const val SCREENSHOTS_LOCATION = "Pictures/Screenshots"
 
 class StopFragment : Fragment() {
 
@@ -63,6 +66,7 @@ class StopFragment : Fragment() {
             val notificationManager =
                 requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
             notificationManager.cancel(ONGOING_NOTIFICATION_ID)
+            removeOldScreenshots()
             saveScreenshotToMediaStore(sharedScreenshotViewModel.bitmap.value!!)
             restartApp()
         }
@@ -89,7 +93,7 @@ class StopFragment : Fragment() {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, "${LocalDateTime.now()}_screenshot_summary.png")
                 put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots")
+                put(MediaStore.Images.Media.RELATIVE_PATH, SCREENSHOTS_LOCATION)
             }
 
             val resolver = context?.contentResolver
@@ -106,6 +110,43 @@ class StopFragment : Fragment() {
             Log.e("ScreenshotError", "Failed to save screenshot: ${e.message}", e)
         }
     }
+
+    private fun removeOldScreenshots() {
+        val resolver = context?.contentResolver ?: return
+        val oneWeekAgo = System.currentTimeMillis() / 1000 - 7 * 24 * 60 * 60 // in seconds
+
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media.RELATIVE_PATH
+        )
+
+        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} = ? AND ${MediaStore.Images.Media.DATE_ADDED} < ?"
+        val selectionArgs = arrayOf(SCREENSHOTS_LOCATION, oneWeekAgo.toString())
+
+        val cursor = resolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor?.use {
+            val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            while (it.moveToNext()) {
+                val id = it.getLong(idColumn)
+                val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                try {
+                    resolver.delete(uri, null, null)
+                    Log.d("ScreenshotCleanup", "Deleted old screenshot: $uri")
+                } catch (e: Exception) {
+                    Log.e("ScreenshotCleanup", "Failed to delete screenshot: ${e.message}", e)
+                }
+            }
+        }
+    }
+
 
     private fun cancelTimerAndAlarm() {
         val alarmServiceIntent = Intent(requireContext(), AlarmNotificationService::class.java)
