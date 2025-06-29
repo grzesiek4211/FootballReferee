@@ -89,8 +89,8 @@
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/team1Selector"
         android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="@id/team2Selector"
+        app:layout_constraintStart_toStartOf="@id/team1Selector"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
