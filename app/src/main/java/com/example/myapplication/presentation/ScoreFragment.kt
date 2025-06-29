@@ -46,26 +46,33 @@ class ScoreFragment(
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         sharedTeamViewModel = ViewModelProvider(requireActivity())[SharedTeamViewModel::class.java]
 
-        sharedTeamViewModel.team1.observe(viewLifecycleOwner) {
-            team1 = it
-            initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
-        }
-        sharedTeamViewModel.team2.observe(viewLifecycleOwner) {
-            team2 = it
-            initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
-        }
-
-        initScoreView(view)
-
-        return view
-    }
-
-    private fun initScoreView(view: View) {
         scoreFragmentView = view.findViewById(R.id.score_layout)
         scoreTextViewTeam1 = view.findViewById(R.id.score_team1)
         scoreTextViewTeam2 = view.findViewById(R.id.score_team2)
         scoreTextViewTeam1.text = "0"
         scoreTextViewTeam2.text = "0"
+
+        observeTeams()
+
+        return view
+    }
+
+    private fun observeTeams() {
+        sharedTeamViewModel.team1.observe(viewLifecycleOwner) { newTeam1 ->
+            team1 = newTeam1
+            maybeInitScores()
+        }
+        sharedTeamViewModel.team2.observe(viewLifecycleOwner) { newTeam2 ->
+            team2 = newTeam2
+            maybeInitScores()
+        }
+    }
+
+    private fun maybeInitScores() {
+        if (team1.isNotEmpty() && team2.isNotEmpty()) {
+            initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
+            initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
+        }
     }
 
     private fun initScore(
