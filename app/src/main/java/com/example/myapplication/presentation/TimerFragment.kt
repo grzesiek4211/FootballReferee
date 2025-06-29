@@ -24,7 +24,7 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
                 putLong("TIMER_DURATION", timerDuration)
             }
         }
-        private const val TIMER_REQUEST_CODE = 100 // Unikalny kod dla PendingIntent AlarmManagera
+        const val TIMER_REQUEST_CODE = 100
         private const val STATE_TIME_REMAINING = "state_time_remaining"
         private const val STATE_IS_PAUSED = "state_is_paused"
         private const val TAG = "TimerFragment"

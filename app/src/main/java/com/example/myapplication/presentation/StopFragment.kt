@@ -1,6 +1,9 @@
 package com.example.myapplication.presentation
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -14,6 +17,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.R
+import com.example.myapplication.presentation.TimerFragment.Companion.TIMER_REQUEST_CODE
 import java.time.LocalDateTime
 
 class StopFragment : Fragment() {
@@ -54,6 +58,7 @@ class StopFragment : Fragment() {
         }
 
         confirmButton.setOnClickListener {
+            cancelTimerAndAlarm()
             saveScreenshotToMediaStore(sharedScreenshotViewModel.bitmap.value!!)
             restartApp()
         }
@@ -97,5 +102,27 @@ class StopFragment : Fragment() {
             Log.e("ScreenshotError", "Failed to save screenshot: ${e.message}", e)
         }
     }
+
+    private fun cancelTimerAndAlarm() {
+        val alarmServiceIntent = Intent(requireContext(), AlarmNotificationService::class.java)
+        requireContext().stopService(alarmServiceIntent)
+
+        val alarmIntent = Intent(requireContext(), TimerExpiredReceiver::class.java).apply {
+            action = TimerExpiredReceiver.ACTION_TIMER_EXPIRED
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            TIMER_REQUEST_CODE,
+            alarmIntent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+        }
+    }
+
 }
 
