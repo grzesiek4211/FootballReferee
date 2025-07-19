@@ -12,31 +12,23 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.time.Instant
 
 private const val TEAM_PLAYERS_NUMBER = 7
 
 class TeamSetupActivity : AppCompatActivity() {
 
-    companion object {
-        val playerNames: List<String> = listOf(
-            "Bartłomiej M.", "Bartosz G.", "Damian W.", "Dave Pe", "Eryk S.", "Filip N.", "Filip O.", "Grzegorz K.",
-            "Hubert J.", "Igor S.", "Jakub W.", "Jan O.", "Jan S.", "Janusz G.", "Jarek J.", "Joannis P.",
-            "Julian T.", "Kacper K.", "Kamil S.", "Karol S.", "Konrad O.", "Konrad R.", "Konrad S.", "Krzysztof Sz.",
-            "Kuba G.", "Maciej P.", "Marek Cz.", "Marek S.", "Martin S.", "Mateusz Ł.", "Mateusz M.", "Mateusz R.",
-            "Michał Z.", "Olaf Ś.", "Przemek P.", "Przemo M.", "Robert S.", "Sebastian F.", "Tomasz K.",
-            "Vitalii V.", "Wojtek G.",
-            "Player1", "Player2", "Player3", "Player4", "Player5", "Player6", "Player7",
-            "Player8", "Player9", "Player10", "Player11", "Player12", "Player13", "Player14"
-        )
-    }
-
+    private lateinit var playerNames: List<String>
     private val team1: MutableList<String> = mutableListOf()
     private val team2: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.team_setup_activity)
+
+        playerNames = loadPlayerNamesFromAssets()
 
         val team1RecyclerView: RecyclerView = findViewById(R.id.myTeamRecyclerView)
         val team2RecyclerView: RecyclerView = findViewById(R.id.opponentRecyclerView)
@@ -83,6 +75,12 @@ class TeamSetupActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()  // Close this activity to prevent going back to it
         }
+    }
+
+    private fun loadPlayerNamesFromAssets(): List<String> {
+        val inputStream = assets.open("players.json")
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        return Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
     }
 
     private fun showPlayerSelectionDialog(
