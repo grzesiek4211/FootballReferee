@@ -46,6 +46,7 @@ class PlayersSetupActivity : AppCompatActivity() {
             hint = getString(R.string.new_player_hint)
             setHintTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
             setTextColor(ContextCompat.getColor(context, android.R.color.white))
+            gravity = Gravity.CENTER
         }
 
         val titleView = TextView(this).apply {
@@ -105,11 +106,15 @@ class PlayersSetupActivity : AppCompatActivity() {
 
         val dialog = builder.create()
         dialog.setOnShowListener {
-            val posBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            val negBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            val deleteBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val cancelBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
 
-            posBtn.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
-            negBtn.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+            deleteBtn.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+            cancelBtn.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+
+            deleteBtn.gravity = Gravity.LEFT
+
+            cancelBtn.gravity = Gravity.RIGHT
         }
         dialog.show()
     }

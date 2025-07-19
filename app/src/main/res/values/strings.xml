@@ -16,7 +16,7 @@
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
-    <string name="new_player_hint">New Player</string>
+    <string name="new_player_hint">New player\'s name</string>
     <string name="dialog_add_title">Add Player</string>
     <string name="dialog_delete_title">Select Player</string>
 
