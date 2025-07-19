@@ -71,4 +71,5 @@ dependencies {
     implementation(libs.fragment)
     implementation(libs.viewpager2)
     implementation(libs.constraintlayout)
+    implementation(libs.gson)
 }
