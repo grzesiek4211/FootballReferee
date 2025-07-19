@@ -3,10 +3,13 @@ package com.example.myapplication.presentation
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -38,40 +41,77 @@ class PlayersSetupActivity : AppCompatActivity() {
     }
 
     private fun showAddPlayerDialog() {
-        val input = EditText(this)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        input.hint = "New player"
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            hint = getString(R.string.new_player_hint)
+            setHintTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+            setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        }
 
-        AlertDialog.Builder(this)
-            .setTitle("Add player")
-            .setView(input)
-            .setPositiveButton("Add") { _, _ ->
-                val name = input.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    playerList.add(name)
-                    savePlayersToFile(playerList)
-                }
+        val titleView = TextView(this).apply {
+            text = getString(R.string.dialog_add_title)
+            textSize = 16f
+            setPadding(0, 32, 0, 16)
+            gravity = Gravity.CENTER
+            setTextColor(ContextCompat.getColor(this@PlayersSetupActivity, android.R.color.white))
+        }
+
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
+        builder.setCustomTitle(titleView)
+        builder.setView(input)
+        builder.setPositiveButton(getString(R.string.add)) { _, _ ->
+            val name = input.text.toString().trim()
+            if (name.isNotEmpty()) {
+                playerList.add(name)
+                savePlayersToFile(playerList)
             }
-            .setNegativeButton("Cancel", null)
-            .show()
+        }
+        builder.setNegativeButton(getString(R.string.cancel), null)
+
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            val posBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            posBtn.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+            negBtn.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        }
+        dialog.show()
     }
 
     private fun showDeletePlayerDialog() {
         val playersArray = playerList.toTypedArray()
         val selected = mutableListOf<String>()
 
-        AlertDialog.Builder(this)
-            .setTitle("Delete player")
-            .setMultiChoiceItems(playersArray, null) { _, index, isChecked ->
-                val name = playersArray[index]
-                if (isChecked) selected.add(name) else selected.remove(name)
-            }
-            .setPositiveButton("Delete") { _, _ ->
-                playerList.removeAll(selected.toSet())
-                savePlayersToFile(playerList)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        val titleView = TextView(this).apply {
+            text = getString(R.string.dialog_delete_title)
+            textSize = 16f
+            setPadding(0, 32, 0, 16)
+            gravity = Gravity.CENTER
+            setTextColor(ContextCompat.getColor(this@PlayersSetupActivity, android.R.color.white))
+        }
+
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
+        builder.setCustomTitle(titleView)
+        builder.setMultiChoiceItems(playersArray, null) { _, index, isChecked ->
+            val name = playersArray[index]
+            if (isChecked) selected.add(name) else selected.remove(name)
+        }
+        builder.setPositiveButton(getString(R.string.delete)) { _, _ ->
+            playerList.removeAll(selected.toSet())
+            savePlayersToFile(playerList)
+        }
+        builder.setNegativeButton(getString(R.string.cancel), null)
+
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            val posBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            posBtn.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+            negBtn.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        }
+        dialog.show()
     }
 
     private fun loadPlayerNamesFromAssets(): MutableList<String> {
@@ -82,7 +122,7 @@ class PlayersSetupActivity : AppCompatActivity() {
         } else {
             val jsonString = assets.open("players.json").bufferedReader().use { it.readText() }
             val list: MutableList<String> = Gson().fromJson(jsonString, object : TypeToken<MutableList<String>>() {}.type)
-            savePlayersToFile(list) // Save initial version to filesDir
+            savePlayersToFile(list)
             list
         }
     }
@@ -92,4 +132,3 @@ class PlayersSetupActivity : AppCompatActivity() {
         file.writeText(Gson().toJson(players))
     }
 }
-

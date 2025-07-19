@@ -9,4 +9,16 @@
     <string name="select_opponents">Select Team2</string>
     <string name="toast_team_setup">You can only select up to %1$d players.</string>
     <string name="select_player">Select Player</string>
+    <string name="add_player">Add player</string>
+    <string name="remove_player">Remove player</string>
+    <string name="next">NEXT</string>
+    <string name="player_name">Player name</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="new_player_hint">New Player</string>
+    <string name="dialog_add_title">Add Player</string>
+    <string name="dialog_delete_title">Select Player</string>
+
+
 </resources>
