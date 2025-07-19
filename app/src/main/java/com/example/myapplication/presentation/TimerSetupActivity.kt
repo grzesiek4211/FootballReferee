@@ -34,7 +34,7 @@ class TimerSetupActivity : AppCompatActivity() {
         }
 
         nextButton.setOnClickListener {
-            val intent = Intent(this, TeamSetupActivity::class.java)
+            val intent = Intent(this, PlayersSetupActivity::class.java)
             intent.putExtra("TIMER_DURATION", timeInMinutes * 60 * 1000)
             startActivity(intent)
             finish()  // Close this activity to prevent going back to it

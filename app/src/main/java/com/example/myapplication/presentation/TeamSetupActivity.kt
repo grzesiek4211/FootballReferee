@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
 import java.time.Instant
 
 private const val TEAM_PLAYERS_NUMBER = 7
@@ -78,9 +79,21 @@ class TeamSetupActivity : AppCompatActivity() {
     }
 
     private fun loadPlayerNamesFromAssets(): List<String> {
-        val inputStream = assets.open("players.json")
-        val jsonString = inputStream.bufferedReader().use { it.readText() }
-        return Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
+        val file = File(filesDir, "players.json")
+        return if (file.exists()) {
+            val jsonString = file.readText()
+            Gson().fromJson(jsonString, object : TypeToken<MutableList<String>>() {}.type)
+        } else {
+            val jsonString = assets.open("players.json").bufferedReader().use { it.readText() }
+            val list: MutableList<String> = Gson().fromJson(jsonString, object : TypeToken<MutableList<String>>() {}.type)
+            savePlayersToFile(list) // Save initial version to filesDir
+            list
+        }
+    }
+
+    private fun savePlayersToFile(players: List<String>) {
+        val file = File(filesDir, "players.json")
+        file.writeText(Gson().toJson(players))
     }
 
     private fun showPlayerSelectionDialog(

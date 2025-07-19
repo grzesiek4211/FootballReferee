@@ -39,6 +39,11 @@
         </activity>
 
         <activity
+            android:name=".presentation.PlayersSetupActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
             android:name=".presentation.TeamSetupActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
