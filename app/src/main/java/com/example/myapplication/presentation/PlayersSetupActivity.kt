@@ -34,8 +34,9 @@ class PlayersSetupActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.nextButton).setOnClickListener {
-            val intent = Intent(this, TeamSetupActivity::class.java)
-            startActivity(intent)
+            val nextIntent = Intent(this, TeamSetupActivity::class.java)
+            nextIntent.putExtra("TIMER_DURATION", intent.getLongExtra("TIMER_DURATION", 0L))
+            startActivity(nextIntent)
             finish()
         }
     }
