@@ -11,4 +11,8 @@
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
+
+    <style name="Theme.MyWearApp.Dark" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
 </resources>
