@@ -20,7 +20,7 @@
 
         <activity
             android:name=".presentation.FullScreenAlarmActivity"
-            android:exported="false" android:showOnLockScreen="true" android:turnScreenOn="true" android:excludeFromRecents="true" android:theme="@style/Theme.MyWearApp.Dark" /> <uses-library
+            android:exported="false" android:showOnLockScreen="true" android:turnScreenOn="true" android:excludeFromRecents="true" android:theme="@style/Theme.MainActivityTheme.Dark" /> <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
 
@@ -31,7 +31,7 @@
         <activity
             android:name=".presentation.TimerSetupActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyWearApp.Dark">
+            android:theme="@style/Theme.MainActivityTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,18 +41,18 @@
         <activity
             android:name=".presentation.PlayersSetupActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyWearApp.Dark" />
+            android:theme="@style/Theme.MainActivityTheme.Dark" />
 
         <activity
             android:name=".presentation.TeamSetupActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyWearApp.Dark" />
+            android:theme="@style/Theme.MainActivityTheme.Dark" />
 
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.MyWearApp.Dark" />
+            android:theme="@style/Theme.MainActivityTheme.Dark" />
 
     </application>
 </manifest>

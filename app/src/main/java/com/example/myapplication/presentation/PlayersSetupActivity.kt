@@ -133,7 +133,13 @@ class PlayersSetupActivity : AppCompatActivity() {
     }
 
     private fun savePlayersToFile(players: List<String>) {
+        val realPlayers = players.filterNot { it.matches(Regex("Player\\d+")) }.sorted()
+        val dummyPlayers = players
+            .filter { it.matches(Regex("Player\\d+")) }
+            .sortedBy { it.removePrefix("Player").toIntOrNull() ?: Int.MAX_VALUE }
+
+        val sortedPlayers = realPlayers + dummyPlayers
         val file = File(filesDir, "players.json")
-        file.writeText(Gson().toJson(players))
+        file.writeText(Gson().toJson(sortedPlayers))
     }
 }
