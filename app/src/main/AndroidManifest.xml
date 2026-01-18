@@ -1,26 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <uses-permission android:name="android.permission.VIBRATE" /> <uses-permission android:name="android.permission.WAKE_LOCK"/> <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" /> <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> <uses-permission android:name="android.permission.USE_EXACT_ALARM"/> <uses-feature android:name="android.hardware.type.watch" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/football_13302"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light"> <service
-        android:name=".presentation.AlarmNotificationService"
-        android:exported="false"
-        android:foregroundServiceType="mediaPlayback" /> <receiver
-        android:name=".presentation.TimerExpiredReceiver"
-        android:exported="false"> <intent-filter>
-        <action android:name="com.example.myapplication.ACTION_TIMER_EXPIRED" />
-    </intent-filter>
-    </receiver>
+        android:theme="@style/Theme.AppCompat.Light">
+
+        <service
+            android:name=".presentation.AlarmNotificationService"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_CATEGORY"
+                android:value="timer_alarm_signal" />
+        </service>
+
+        <receiver
+            android:name=".presentation.TimerExpiredReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.myapplication.presentation.ACTION_TIMER_EXPIRED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".presentation.FullScreenAlarmActivity"
-            android:exported="false" android:showOnLockScreen="true" android:turnScreenOn="true" android:excludeFromRecents="true" android:theme="@style/Theme.MainActivityTheme.Dark" /> <uses-library
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:showOnLockScreen="true"
+            android:theme="@style/Theme.MainActivityTheme.Dark"
+            android:turnScreenOn="true" />
+
+        <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
 
@@ -51,7 +75,7 @@
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.MainActivityTheme.Dark" />
 
     </application>
