@@ -50,7 +50,7 @@ class TeamSetupActivity : AppCompatActivity() {
         team1RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
         team2RecyclerView.addItemDecoration(SpacingItemDecoration(spacingInDp))
 
-        addTeam1Members.setOnClickListener {
+        addTeam1Members.setSafeOnClickListener {
             showPlayerSelectionDialog(
                 title = getString(R.string.select_my_team),
                 team = team1,
@@ -59,7 +59,7 @@ class TeamSetupActivity : AppCompatActivity() {
             )
         }
 
-        addTeam2Members.setOnClickListener {
+        addTeam2Members.setSafeOnClickListener {
             showPlayerSelectionDialog(
                 title = getString(R.string.select_opponents),
                 team = team2,
@@ -68,7 +68,7 @@ class TeamSetupActivity : AppCompatActivity() {
             )
         }
 
-        startButton.setOnClickListener {
+        startButton.setSafeOnClickListener {
                 intent.setClass(this, MainActivity::class.java)
                 intent.putStringArrayListExtra("MY_TEAM", ArrayList(team1))
                 intent.putStringArrayListExtra("OPPONENT_TEAM", ArrayList(team2))

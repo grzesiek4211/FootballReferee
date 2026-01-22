@@ -8,7 +8,7 @@ import android.util.Log
 
 class TimerExpiredReceiver : BroadcastReceiver() {
     companion object {
-        const val ACTION_TIMER_EXPIRED = "com.example.myapplication.ACTION_TIMER_EXPIRED"
+        const val ACTION_TIMER_EXPIRED = "com.example.myapplication.presentation.ACTION_TIMER_EXPIRED"
     }
 
     override fun onReceive(context: Context, intent: Intent) {

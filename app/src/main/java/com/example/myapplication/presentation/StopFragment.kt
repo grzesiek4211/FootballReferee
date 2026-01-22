@@ -46,7 +46,7 @@ class StopFragment : Fragment() {
         sharedScreenshotViewModel = ViewModelProvider(requireActivity()).get(SharedScreenshotViewModel::class.java)
 
         val stopButton: Button = view.findViewById(R.id.stopButton)
-        stopButton.setOnClickListener {
+        stopButton.setSafeOnClickListener {
             showConfirmationStopDialog(stopLayout, confirmationStopLayout)
         }
 
@@ -61,17 +61,26 @@ class StopFragment : Fragment() {
         val confirmButton =
             confirmationStopLayout.findViewById<TextView>(R.id.stop_confirmation_confirm_button)
 
-        cancelButton.setOnClickListener {
+        cancelButton.setSafeOnClickListener {
             hideDialog(confirmationStopLayout, stopLayout)
         }
 
-        confirmButton.setOnClickListener {
+        confirmButton.setSafeOnClickListener  {
+            // 1. Czyścimy wszystko
             cancelTimerAndAlarm()
+            clearTimerPreferences() // KLUCZOWA ZMIANA
+
+            // 2. Powiadomienia
             val notificationManager =
                 requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
             notificationManager.cancel(ONGOING_NOTIFICATION_ID)
+
+            // 3. Logika końcowa
             removeScreenshotsOlderThan(WEEK_IN_SECS)
-            saveScreenshotToMediaStore(sharedScreenshotViewModel.bitmap.value!!)
+            sharedScreenshotViewModel.bitmap.value?.let {
+                saveScreenshotToMediaStore(it)
+            }
+
             restartApp()
         }
     }
@@ -88,8 +97,17 @@ class StopFragment : Fragment() {
 
     private fun restartApp() {
         val intent = Intent(activity, TimerSetupActivity::class.java)
+        // Flagi upewniają się, że stara instancja MainActivity zostanie całkowicie usunięta
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
+        activity?.finish() // Kończymy obecną aktywność
+    }
+
+    // Nowa metoda czyszcząca pamięć timera
+    private fun clearTimerPreferences() {
+        val prefs = requireContext().getSharedPreferences("timer_prefs", Context.MODE_PRIVATE)
+        prefs.edit().clear().apply()
+        Log.d("StopFragment", "Timer SharedPreferences cleared.")
     }
 
     private fun saveScreenshotToMediaStore(bitmap: Bitmap) {
@@ -106,7 +124,6 @@ class StopFragment : Fragment() {
                 resolver.openOutputStream(it).use { outputStream ->
                     if (outputStream != null) {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    } else {
                     }
                 }
             }
@@ -117,27 +134,19 @@ class StopFragment : Fragment() {
 
     private fun removeScreenshotsOlderThan(secs: Long) {
         val resolver = context?.contentResolver ?: return
-
         val oneWeekAgoInSeconds = System.currentTimeMillis() / 1000 - secs
-
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(_ID, DATE_ADDED, RELATIVE_PATH)
-
         val selection = "$RELATIVE_PATH LIKE ? AND $DATE_ADDED < ?"
         val selectionArgs = arrayOf("%$SCREENSHOTS_LOCATION%", oneWeekAgoInSeconds.toString())
-        val cursor = resolver.query(uri, projection, selection, selectionArgs, null)
 
-        cursor?.use {
-            val idColumn = it.getColumnIndexOrThrow(_ID)
-            while (it.moveToNext()) {
-                val id = it.getLong(idColumn)
+        resolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
+            val idColumn = cursor.getColumnIndexOrThrow(_ID)
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idColumn)
                 val imageUri = ContentUris.withAppendedId(uri, id)
-
                 try {
-                    val rows = resolver.delete(imageUri, null, null)
-                    Log.d("ScreenshotCleanup", "Deleted URI: $imageUri (rows: $rows)")
-                } catch (e: SecurityException) {
-                    Log.e("ScreenshotCleanup", "SecurityException deleting $imageUri", e)
+                    resolver.delete(imageUri, null, null)
                 } catch (e: Exception) {
                     Log.e("ScreenshotCleanup", "Error deleting $imageUri", e)
                 }
@@ -146,11 +155,13 @@ class StopFragment : Fragment() {
     }
 
     private fun cancelTimerAndAlarm() {
+        // Zatrzymujemy serwis dźwięku/wibracji
         val alarmServiceIntent = Intent(requireContext(), AlarmNotificationService::class.java)
         requireContext().stopService(alarmServiceIntent)
 
+        // Anulujemy zaplanowany alarm w systemie
         val alarmIntent = Intent(requireContext(), TimerExpiredReceiver::class.java).apply {
-            action = TimerExpiredReceiver.ACTION_TIMER_EXPIRED
+            action = "com.example.myapplication.presentation.ACTION_TIMER_EXPIRED"
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -163,8 +174,7 @@ class StopFragment : Fragment() {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         pendingIntent?.let {
             alarmManager.cancel(it)
+            it.cancel() // Ważne: usuwamy sam PendingIntent z pamięci systemu
         }
     }
-
 }
-

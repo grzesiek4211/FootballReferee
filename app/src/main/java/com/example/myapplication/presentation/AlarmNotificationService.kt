@@ -104,6 +104,7 @@ class AlarmNotificationService : Service() {
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setContentIntent(contentPendingIntent)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             builder.setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
