@@ -240,9 +240,16 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
     }
 
     private fun loadState() {
+        // Czytamy czas zakończenia i stan pauzy
         endTime = prefs.getLong(KEY_END_TIME, 0L)
-        timeRemaining = prefs.getLong(KEY_REMAINING, initialTimerValue)
         isPaused = prefs.getBoolean(KEY_IS_PAUSED, false)
+
+        // CZYTAMY ZAPISANY CZAS SETUPU (nasze 4 minuty)
+        val savedSetupTime = prefs.getLong("saved_setup_time", 5) // 5 jako domyślne
+        initialTimerValue = savedSetupTime * 60 * 1000L
+
+        // Jeśli nie mamy zapisanego pozostałego czasu, używamy tego z setupu
+        timeRemaining = prefs.getLong(KEY_REMAINING, initialTimerValue)
     }
 
     private fun cancelTimer() {

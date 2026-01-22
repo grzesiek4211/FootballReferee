@@ -42,16 +42,22 @@ class ScoreFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        super.onCreate(savedInstanceState)
+
         sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         sharedTeamViewModel = ViewModelProvider(requireActivity())[SharedTeamViewModel::class.java]
 
         scoreFragmentView = view.findViewById(R.id.score_layout)
         scoreTextViewTeam1 = view.findViewById(R.id.score_team1)
         scoreTextViewTeam2 = view.findViewById(R.id.score_team2)
+
         scoreTextViewTeam1.text = "0"
         scoreTextViewTeam2.text = "0"
 
+        // FIX 1: Inicjalizujemy Listenery OD RAZU, nawet jeśli listy są puste.
+        // Dzięki temu klikanie zawsze będzie działać.
+        setupClickListeners()
+
+        // FIX 2: Obserwujemy tylko po to, żeby zaktualizować zmienne team1 i team2 w tle.
         observeTeams()
 
         return view
@@ -60,30 +66,25 @@ class ScoreFragment(
     private fun observeTeams() {
         sharedTeamViewModel.team1.observe(viewLifecycleOwner) { newTeam1 ->
             team1 = newTeam1
-            maybeInitScores()
         }
         sharedTeamViewModel.team2.observe(viewLifecycleOwner) { newTeam2 ->
             team2 = newTeam2
-            maybeInitScores()
         }
     }
 
-    private fun maybeInitScores() {
-        if (team1.isNotEmpty() && team2.isNotEmpty()) {
-            initScore(scoreTextViewTeam1, team1, team2, backupScoreTeam1, Team.TEAM1)
-            initScore(scoreTextViewTeam2, team2, team1, backupScoreTeam2, Team.TEAM2)
-        }
+    private fun setupClickListeners() {
+        initScore(scoreTextViewTeam1, Team.TEAM1)
+        initScore(scoreTextViewTeam2, Team.TEAM2)
     }
 
-    private fun initScore(
-        scoreTextView: TextView,
-        team: List<String>,
-        otherTeam: List<String>,
-        currentScore: Score,
-        whichTeam: Team
-    ) {
+    private fun initScore(scoreTextView: TextView, whichTeam: Team) {
         scoreTextView.setOnClickListener {
-            incrementScore(team, otherTeam, currentScore, scoreTextView, history, whichTeam)
+            // Używamy aktualnych wartości team1 i team2 w momencie kliknięcia
+            if (whichTeam == Team.TEAM1) {
+                incrementScore(team1, team2, backupScoreTeam1, scoreTextView, history, whichTeam)
+            } else {
+                incrementScore(team2, team1, backupScoreTeam2, scoreTextView, history, whichTeam)
+            }
             updateSharedHistory()
         }
         scoreTextView.setOnLongClickListener {
@@ -100,57 +101,61 @@ class ScoreFragment(
         history: History,
         team: Team
     ) {
-        var scorer: String
-        var assistant: String? = null
-        val extendedScorerList = mutableListOf("---NONE---")
-        extendedScorerList.addAll(scoringTeam)
-        extendedScorerList.addAll(otherTeam)
-        val extendedAssistantList = mutableListOf("---NONE---")
-        extendedAssistantList.addAll(scoringTeam)
+        // Jeśli listy są puste, kod wejdzie w sekcję 'else' na dole i po prostu doda punkt.
         if (scoringTeam.isNotEmpty() || otherTeam.isNotEmpty()) {
+            var scorer: String
+            var assistant: String? = null
+            val extendedScorerList = mutableListOf("---NONE---")
+            extendedScorerList.addAll(scoringTeam)
+            extendedScorerList.addAll(otherTeam)
+            val extendedAssistantList = mutableListOf("---NONE---")
+            extendedAssistantList.addAll(scoringTeam)
+
             showPlayerListDialog("Select goal scorer", extendedScorerList, otherTeam) { selectedScorer ->
                 scorer = selectedScorer
 
                 showPlayerListDialog("Select goal assistant", extendedAssistantList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
                     if (selectedAssistant != "---NONE---") {
                         assistant = selectedAssistant
-                        Toast.makeText(
-                            requireContext(),
-                            "Goal scorer: $scorer ($assistant)",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT).show()
                     }
-                    currentScore.increment()
-                    scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
-                    history.add(
-                        HistoryItem(
-                            Score(scoreTextView.text.toString().toInt()),
-                            team,
-                            scorer,
-                            otherTeam.contains(scorer),
-                            java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
-                            assistant
-                        )
-                    )
+
+                    applyScoreIncrement(currentScore, scoreTextView, history, team, scorer, otherTeam.contains(scorer), assistant)
                 }
             }
         } else {
-            currentScore.increment()
-            scoreTextView.text = (scoreTextView.text.toString().toInt() + 1).toString()
-            history.add(
-                HistoryItem(
-                    Score(scoreTextView.text.toString().toInt()),
-                    team,
-                    "",
-                    false,
-                    java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
-                    null
-                )
-            )
+            // Brak zdefiniowanych graczy - po prostu zwiększamy wynik (tak jak chciałeś)
+            applyScoreIncrement(currentScore, scoreTextView, history, team, "", false, null)
         }
+    }
+
+    // Pomocnicza funkcja, żeby nie powtarzać kodu dodawania punktu
+    private fun applyScoreIncrement(
+        currentScore: Score,
+        scoreTextView: TextView,
+        history: History,
+        team: Team,
+        scorer: String,
+        isOwnGoal: Boolean,
+        assistant: String?
+    ) {
+        currentScore.increment()
+        val newScoreValue = (scoreTextView.text.toString().toInt() + 1)
+        scoreTextView.text = newScoreValue.toString()
+
+        history.add(
+            HistoryItem(
+                Score(newScoreValue),
+                team,
+                scorer,
+                isOwnGoal,
+                java.time.Duration.between(matchStartTime, Instant.now()).toMinutes().toInt() + 1,
+                assistant
+            )
+        )
+        updateSharedHistory()
     }
 
     private fun editScoreViewAsDialog() {
@@ -190,9 +195,6 @@ class ScoreFragment(
         }
 
         cancelButton.setOnClickListener {
-            this.scoreTextViewTeam1.text = backupScoreTeam1.toString()
-            this.scoreTextViewTeam2.text = backupScoreTeam2.toString()
-            editableHistory = history.copy()
             dialog.dismiss()
         }
 
@@ -253,25 +255,17 @@ class ScoreFragment(
         }
 
         builder.setAdapter(adapter) { _, which ->
-            val selectedPlayer = players[which]
-            onPlayerSelected(selectedPlayer)
+            onPlayerSelected(players[which])
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
 
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                ?.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
-        }
-
         dialog.window?.setBackgroundDrawableResource(android.R.color.black)
         dialog.show()
     }
 
     private fun updateSharedHistory() {
-        sharedViewModel.history = MutableLiveData(history)
+        sharedViewModel.history.postValue(history)
     }
 }

@@ -9,29 +9,36 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.R
 
 class TimerSetupActivity : AppCompatActivity() {
+
+    // Klucze do SharedPreferences
+    private val PREFS_NAME = "timer_prefs"
+    private val KEY_SAVED_SETUP_TIME = "saved_setup_time"
+    private val KEY_END_TIME = "end_time"
+    private val KEY_IS_PAUSED = "is_paused"
+
     private var timeInMinutes = DEFAULT_TIME_DURATION_MINUTES
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // KLUCZOWY FIX: Sprawdź, czy timer już działa w tle
-        val prefs = getSharedPreferences("timer_prefs", Context.MODE_PRIVATE)
-        val endTime = prefs.getLong("end_time", 0L)
-        val isPaused = prefs.getBoolean("is_paused", true)
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val endTime = prefs.getLong(KEY_END_TIME, 0L)
+        val isPaused = prefs.getBoolean(KEY_IS_PAUSED, true)
 
-        // Jeśli endTime > 0, to znaczy, że timer został uruchomiony i nie został zresetowany w StopFragment
+        // 1. Przekierowanie, jeśli mecz trwa
         if (endTime > 0 || !isPaused) {
             val intent = Intent(this, MainActivity::class.java)
-            // Flagi upewniają się, że nie tworzymy nowej kopii, tylko wracamy do starej
             intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
-            finish() // Zamykamy ekran setupu
+            finish()
             return
         }
 
         setContentView(R.layout.timer_setup_activity)
 
-        // ... reszta Twojego kodu bez zmian ...
+        // 2. Wczytaj ostatnio używany czas (np. Twoje 4 minuty)
+        timeInMinutes = prefs.getLong(KEY_SAVED_SETUP_TIME, DEFAULT_TIME_DURATION_MINUTES)
+
         val timeTextView: TextView = findViewById(R.id.timeTextView)
         val incrementButton: Button = findViewById(R.id.incrementButton)
         val decrementButton: Button = findViewById(R.id.decrementButton)
@@ -52,15 +59,27 @@ class TimerSetupActivity : AppCompatActivity() {
         }
 
         nextButton.setOnClickListener {
+            // 3. ZAPISZ czas przed przejściem dalej, żeby apka go pamiętała na zawsze
+            prefs.edit().putLong(KEY_SAVED_SETUP_TIME, timeInMinutes).apply()
+
             val intent = Intent(this, PlayersSetupActivity::class.java)
             intent.putExtra("TIMER_DURATION", timeInMinutes * 60 * 1000)
             startActivity(intent)
-            // UWAGA: Nie dawaj tu finish(), jeśli chcesz móc wrócić do ustawień czasu
-            // z poziomu listy graczy przyciskiem wstecz.
         }
     }
 
     private fun updateDisplayedTime(timeTextView: TextView) {
         timeTextView.text = String.format("%02d:00", timeInMinutes)
+    }
+
+    // Ten fragment kodu sprawi, że jak mecz trwa i jakimś cudem tu trafisz
+    // (np. klikając wstecz), apka po prostu się schowa zamiast pokazać setup.
+    override fun onResume() {
+        super.onResume()
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val endTime = prefs.getLong(KEY_END_TIME, 0L)
+        if (endTime > 0) {
+            finish()
+        }
     }
 }
