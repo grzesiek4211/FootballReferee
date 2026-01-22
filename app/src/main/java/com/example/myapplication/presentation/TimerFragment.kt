@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
 
     private var timer: CountDownTimer? = null
     private var isPaused = false
-    private var initialTimerValue: Long = 5 * 60 * 1000L // Domyślnie 5 min
+    private var initialTimerValue: Long = 5 * 60 * 1000L
     private var timeRemaining: Long = initialTimerValue
     private var endTime: Long = 0L
 
@@ -55,20 +54,17 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
         buttonPausePlay = view.findViewById(R.id.button_pause_play)
         buttonRestart = view.findViewById(R.id.button_restart)
 
-        // 1. Załaduj stan z pamięci trwałej (SharedPrefs)
         loadState()
 
-        // 2. Obsługa argumentów tylko przy pierwszym uruchomieniu
         if (savedInstanceState == null && endTime == 0L && timeRemaining == initialTimerValue) {
             arguments?.let {
                 initialTimerValue = it.getLong("TIMER_DURATION", initialTimerValue)
                 timeRemaining = initialTimerValue
             }
-            // AUTO-START: Odpalamy od razu
             startTimer(timeRemaining)
         }
 
-        buttonPausePlay.setOnClickListener {
+        buttonPausePlay.setSafeOnClickListener {
             if (isPaused) {
                 checkExactAlarmPermission()
                 startTimer(timeRemaining)
@@ -77,7 +73,7 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
             }
         }
 
-        buttonRestart.setOnClickListener {
+        buttonRestart.setSafeOnClickListener {
             restartTimer()
         }
 
@@ -86,13 +82,11 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
 
     override fun onResume() {
         super.onResume()
-        // Kluczowe dla Wear OS 6: Przelicz czas po powrocie do apki
         refreshTimerState()
     }
 
     override fun onPause() {
         super.onPause()
-        // Zapisz stan, gdy użytkownik wychodzi przyciskiem "wstecz"
         saveState()
     }
 
@@ -167,8 +161,6 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
         buttonPausePlay.text = if (isPaused) "▶️" else "⏸"
     }
 
-    // --- SYSTEM ALARM & PERMISSIONS ---
-
     private fun checkExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -228,8 +220,6 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
         requireContext().stopService(intent)
     }
 
-    // --- PERSISTENCE ---
-
     private fun saveState() {
         prefs.edit().apply {
             putLong(KEY_END_TIME, endTime)
@@ -240,15 +230,10 @@ class TimerFragment : CurrentTimeFragment(R.layout.timer_fragment, R.id.current_
     }
 
     private fun loadState() {
-        // Czytamy czas zakończenia i stan pauzy
         endTime = prefs.getLong(KEY_END_TIME, 0L)
         isPaused = prefs.getBoolean(KEY_IS_PAUSED, false)
-
-        // CZYTAMY ZAPISANY CZAS SETUPU (nasze 4 minuty)
-        val savedSetupTime = prefs.getLong("saved_setup_time", 5) // 5 jako domyślne
+        val savedSetupTime = prefs.getLong("saved_setup_time", 5)
         initialTimerValue = savedSetupTime * 60 * 1000L
-
-        // Jeśli nie mamy zapisanego pozostałego czasu, używamy tego z setupu
         timeRemaining = prefs.getLong(KEY_REMAINING, initialTimerValue)
     }
 

@@ -25,15 +25,15 @@ class PlayersSetupActivity : AppCompatActivity() {
 
         playerList = loadPlayerNamesFromAssets()
 
-        findViewById<Button>(R.id.addButton).setOnClickListener {
+        findViewById<Button>(R.id.addButton).setSafeOnClickListener {
             showAddPlayerDialog()
         }
 
-        findViewById<Button>(R.id.deleteButton).setOnClickListener {
+        findViewById<Button>(R.id.deleteButton).setSafeOnClickListener {
             showDeletePlayerDialog()
         }
 
-        findViewById<Button>(R.id.nextButton).setOnClickListener {
+        findViewById<Button>(R.id.nextButton).setSafeOnClickListener {
             val nextIntent = Intent(this, TeamSetupActivity::class.java)
             nextIntent.putExtra("TIMER_DURATION", intent.getLongExtra("TIMER_DURATION", 0L))
             startActivity(nextIntent)

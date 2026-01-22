@@ -78,7 +78,7 @@ class ScoreFragment(
     }
 
     private fun initScore(scoreTextView: TextView, whichTeam: Team) {
-        scoreTextView.setOnClickListener {
+        scoreTextView.setSafeOnClickListener {
             // Używamy aktualnych wartości team1 i team2 w momencie kliknięcia
             if (whichTeam == Team.TEAM1) {
                 incrementScore(team1, team2, backupScoreTeam1, scoreTextView, history, whichTeam)
@@ -178,27 +178,27 @@ class ScoreFragment(
         builder.setView(scoreEditorView)
         val dialog = builder.create()
 
-        incrementLeft.setOnClickListener {
+        incrementLeft.setSafeOnClickListener {
             incrementScore(team1, team2, backupScoreTeam1.copy(), scoreLeftTextView, editableHistory, Team.TEAM1)
         }
 
-        decrementLeft.setOnClickListener {
+        decrementLeft.setSafeOnClickListener {
             decrementScore(scoreLeftTextView, Team.TEAM1)
         }
 
-        incrementRight.setOnClickListener {
+        incrementRight.setSafeOnClickListener {
             incrementScore(team2, team1, backupScoreTeam2.copy(), scoreRightTextView, editableHistory, Team.TEAM2)
         }
 
-        decrementRight.setOnClickListener {
+        decrementRight.setSafeOnClickListener {
             decrementScore(scoreRightTextView, Team.TEAM2)
         }
 
-        cancelButton.setOnClickListener {
+        cancelButton.setSafeOnClickListener {
             dialog.dismiss()
         }
 
-        confirmButton.setOnClickListener {
+        confirmButton.setSafeOnClickListener {
             backupScoreTeam1.set(scoreLeftTextView.text.toString().toInt())
             backupScoreTeam2.set(scoreRightTextView.text.toString().toInt())
             scoreTextViewTeam1.text = backupScoreTeam1.toString()

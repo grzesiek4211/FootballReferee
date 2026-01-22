@@ -27,7 +27,7 @@ class FullScreenAlarmActivity : AppCompatActivity() {
         setContentView(R.layout.activity_full_screen_alarm)
 
         val stopButton: Button = findViewById(R.id.stopAlarmButton)
-        stopButton.setOnClickListener {
+        stopButton.setSafeOnClickListener {
             Log.d("FullScreenAlarmActivity", "Stop button clicked. Stopping AlarmNotificationService.")
             val stopAlarmIntent = Intent(this, AlarmNotificationService::class.java)
             stopService(stopAlarmIntent)

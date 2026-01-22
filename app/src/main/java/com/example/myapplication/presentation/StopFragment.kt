@@ -46,7 +46,7 @@ class StopFragment : Fragment() {
         sharedScreenshotViewModel = ViewModelProvider(requireActivity()).get(SharedScreenshotViewModel::class.java)
 
         val stopButton: Button = view.findViewById(R.id.stopButton)
-        stopButton.setOnClickListener {
+        stopButton.setSafeOnClickListener {
             showConfirmationStopDialog(stopLayout, confirmationStopLayout)
         }
 
@@ -61,11 +61,11 @@ class StopFragment : Fragment() {
         val confirmButton =
             confirmationStopLayout.findViewById<TextView>(R.id.stop_confirmation_confirm_button)
 
-        cancelButton.setOnClickListener {
+        cancelButton.setSafeOnClickListener {
             hideDialog(confirmationStopLayout, stopLayout)
         }
 
-        confirmButton.setOnClickListener {
+        confirmButton.setSafeOnClickListener  {
             // 1. Czyścimy wszystko
             cancelTimerAndAlarm()
             clearTimerPreferences() // KLUCZOWA ZMIANA

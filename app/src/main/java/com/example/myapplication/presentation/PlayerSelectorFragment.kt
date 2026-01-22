@@ -54,7 +54,7 @@ class PlayerSelectorFragment : Fragment() {
             }
         }
 
-        team1Selector.setOnClickListener {
+        team1Selector.setSafeOnClickListener {
             if(team1Players.isNotEmpty()) {
                 showPlayerSelectionDialog("Select Player", team1Players) { selected ->
                     selectedTeam1Player = selected
@@ -68,7 +68,7 @@ class PlayerSelectorFragment : Fragment() {
             }
         }
 
-        team2Selector.setOnClickListener {
+        team2Selector.setSafeOnClickListener {
             if(team2Players.isNotEmpty()) {
                 showPlayerSelectionDialog("Select Player", team2Players) { selected ->
                     selectedTeam2Player = selected
@@ -82,7 +82,7 @@ class PlayerSelectorFragment : Fragment() {
             }
         }
 
-        confirmButton.setOnClickListener {
+        confirmButton.setSafeOnClickListener {
             if (selectedTeam1Player != null && selectedTeam2Player != null) {
                 val updatedTeam1 = updateTeam(team1Players, selectedTeam1Player!!, selectedTeam2Player!!)
                 val updatedTeam2 = updateTeam(team2Players, selectedTeam2Player!!, selectedTeam1Player!!)

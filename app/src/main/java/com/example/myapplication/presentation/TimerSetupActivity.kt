@@ -46,19 +46,19 @@ class TimerSetupActivity : AppCompatActivity() {
 
         updateDisplayedTime(timeTextView)
 
-        incrementButton.setOnClickListener {
+        incrementButton.setSafeOnClickListener {
             timeInMinutes++
             updateDisplayedTime(timeTextView)
         }
 
-        decrementButton.setOnClickListener {
+        decrementButton.setSafeOnClickListener {
             if (timeInMinutes > 1) {
                 timeInMinutes--
                 updateDisplayedTime(timeTextView)
             }
         }
 
-        nextButton.setOnClickListener {
+        nextButton.setSafeOnClickListener {
             // 3. ZAPISZ czas przed przejściem dalej, żeby apka go pamiętała na zawsze
             prefs.edit().putLong(KEY_SAVED_SETUP_TIME, timeInMinutes).apply()
 
