@@ -6,10 +6,10 @@ import android.view.View
 
 /**
  * Rozszerzenie dla View, które zapobiega wielokrotnym kliknięciom (np. przez deszcz).
- * Domyślny czas blokady to 1000ms (1 sekunda).
+ * Domyślny czas blokady to 600ms.
  */
 
-fun View.setSafeOnClickListener(interval: Int = 1000, onSafeClick: (View) -> Unit) {
+fun View.setSafeOnClickListener(interval: Int = 600, onSafeClick: (View) -> Unit) {
     val safeClickListener = SafeClickListener(interval) {
         onSafeClick(it)
     }

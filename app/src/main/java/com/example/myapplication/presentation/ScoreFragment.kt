@@ -101,37 +101,39 @@ class ScoreFragment(
         history: History,
         team: Team
     ) {
-        // Jeśli listy są puste, kod wejdzie w sekcję 'else' na dole i po prostu doda punkt.
         if (scoringTeam.isNotEmpty() || otherTeam.isNotEmpty()) {
             var scorer: String
             var assistant: String? = null
-            val extendedScorerList = mutableListOf("---NONE---")
+            val extendedScorerList = mutableListOf<String>()
             extendedScorerList.addAll(scoringTeam)
+            extendedScorerList.add("---NONE---")
             extendedScorerList.addAll(otherTeam)
             val extendedAssistantList = mutableListOf("---NONE---")
             extendedAssistantList.addAll(scoringTeam)
 
             showPlayerListDialog("Select goal scorer", extendedScorerList, otherTeam) { selectedScorer ->
-                scorer = selectedScorer
+                if (selectedScorer != "---NONE---") {
+                    scorer = selectedScorer
 
-                showPlayerListDialog("Select goal assistant", extendedAssistantList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
-                    if (selectedAssistant != "---NONE---") {
-                        assistant = selectedAssistant
-                        Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT).show()
+                    showPlayerListDialog("Select goal assistant", extendedAssistantList.filter { it == "---NONE---" || it != scorer }, otherTeam) { selectedAssistant ->
+                        if (selectedAssistant != "---NONE---") {
+                            assistant = selectedAssistant
+                            Toast.makeText(requireContext(), "Goal scorer: $scorer ($assistant)", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Goal scorer: $scorer", Toast.LENGTH_SHORT).show()
+                        }
+
+                        applyScoreIncrement(currentScore, scoreTextView, history, team, scorer, otherTeam.contains(scorer), assistant)
                     }
-
-                    applyScoreIncrement(currentScore, scoreTextView, history, team, scorer, otherTeam.contains(scorer), assistant)
+                } else {
+                    applyScoreIncrement(currentScore, scoreTextView, history, team, "", false, null)
                 }
             }
         } else {
-            // Brak zdefiniowanych graczy - po prostu zwiększamy wynik (tak jak chciałeś)
             applyScoreIncrement(currentScore, scoreTextView, history, team, "", false, null)
         }
     }
 
-    // Pomocnicza funkcja, żeby nie powtarzać kodu dodawania punktu
     private fun applyScoreIncrement(
         currentScore: Score,
         scoreTextView: TextView,
