@@ -1,6 +1,5 @@
 package com.example.myapplication.presentation
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,18 +8,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import androidx.wear.ongoing.OngoingActivity
+import androidx.wear.ongoing.Status.Builder
+import androidx.wear.ongoing.Status.TextPart
 import com.example.myapplication.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.Instant
-import java.time.format.DateTimeParseException
-import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.wear.ongoing.OngoingActivity
-import androidx.wear.ongoing.Status.Builder
-import androidx.wear.ongoing.Status.TextPart
 
 const val DEFAULT_TIME_DURATION_MINUTES = 5L
 
@@ -49,6 +49,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         Log.d(TAG, "onCreate: MainActivity started.")
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {override fun handleOnBackPressed() {
+            Toast.makeText(
+                this@MainActivity,"Use Home button to exit",
+                Toast.LENGTH_SHORT
+            ).show()
+            Log.d("MainActivity", "Back button blocked!")
+        }
+        })
 
         // 1. Sprawdź, czy dane już istnieją w pamięci (np. po obrocie lub powrocie)
         if (savedInstanceState != null) {
@@ -108,12 +117,6 @@ class MainActivity : AppCompatActivity() {
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
         tabLayout.touchables.forEach { it.isClickable = false }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        // Zamiast nic nie robić, na Wear OS często lepiej przenieść apkę do tyłu
-        moveTaskToBack(true)
     }
 
     override fun onGenericMotionEvent(event: MotionEvent): Boolean {
